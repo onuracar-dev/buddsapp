@@ -1,0 +1,6 @@
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = 'https://ftmhxjhcmivenybudvho.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ0bWh4amhjbWl2ZW55YnVkdmhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxMjY0MDQsImV4cCI6MjA5NzcwMjQwNH0.fVS5ktVQA7p669c5Rzopfxv3gLfCVl07fJC50tym5nI';
+
+export const supabase = createClient(supabaseUrl, supabaseKey);
