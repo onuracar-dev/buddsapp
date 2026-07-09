@@ -1,6 +1,14 @@
 # BuddsApp 🚀
 *A modern, real-time community chat platform with voice channels, stories, and AI integration.*
 
+## Project Snapshot
+
+BuddsApp is a real-time community app built with React, Supabase, LiveKit, and Gemini. It demonstrates full-product thinking: authentication, workspace invites, realtime chat, media upload, voice rooms, admin roles, stories, AI chat behavior, and deployment-oriented configuration.
+
+- **Core idea:** a Discord-like social workspace with lightweight community features and AI-native chat utilities.
+- **Recent hardening:** LiveKit token signing was moved out of the browser into a Supabase Edge Function so the API secret is no longer exposed in frontend builds.
+- **Validation:** `npm run build` and `npm run lint` currently pass; lint reports warnings for cleanup candidates.
+
 [Türkçe dökümantasyon için aşağı kaydırın / Scroll down for Turkish documentation](#buddsapp-türkçe-kılavuz-tr)
 
 ---
