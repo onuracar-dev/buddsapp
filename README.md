@@ -45,8 +45,6 @@ VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 
 # LiveKit (For Voice Calls)
 VITE_LIVEKIT_URL=wss://your-project.livekit.cloud
-VITE_LIVEKIT_API_KEY=your_livekit_api_key
-VITE_LIVEKIT_API_SECRET=your_livekit_api_secret
 
 # Admin Identity
 VITE_ADMIN_EMAIL=your_admin_email@example.com
@@ -57,7 +55,8 @@ VITE_EASTER_EGG_PASS=your_secret_invitation_code
 1. **Database Schema**: Execute the SQL commands found in `supabase/schema.sql` (if provided) in your Supabase SQL Editor.
 2. **Authentication**: Enable Email login in Supabase Auth settings.
 3. **Storage**: Create a public bucket named `chats` for media and file uploads.
-4. **Global Settings**: In your Supabase database, create a table `global_settings` and insert an row with `id='gemini_api_key'` and your Google Gemini API Key in `text_value`.
+4. **LiveKit Token Function**: Deploy the `supabase/functions/livekit-token` Edge Function and set `LIVEKIT_API_KEY` / `LIVEKIT_API_SECRET` as Supabase secrets. Do not expose the LiveKit API secret in frontend `.env` files.
+5. **Global Settings**: In your Supabase database, create a table `global_settings` and insert an row with `id='gemini_api_key'` and your Google Gemini API Key in `text_value`.
 
 ### 5. Running Locally
 ```bash
@@ -116,8 +115,6 @@ VITE_SUPABASE_ANON_KEY=senin_supabase_anon_key_şifren
 
 # LiveKit (Ses Odaları İçin)
 VITE_LIVEKIT_URL=wss://senin-projen.livekit.cloud
-VITE_LIVEKIT_API_KEY=livekit_api_anahtarin
-VITE_LIVEKIT_API_SECRET=livekit_gizli_anahtarin
 
 # Kurucu (Admin) Bilgileri
 VITE_ADMIN_EMAIL=kendi_eposta_adresin@gmail.com
@@ -129,7 +126,8 @@ VITE_EASTER_EGG_PASS=gizli_giris_sifren
 1. **Veritabanı**: Supabase SQL editöründen gerekli tablo yapılarını kurun.
 2. **Kayıt Sistemi (Auth)**: Supabase Auth ayarlarından "Email" ile girişi aktif edin.
 3. **Depolama (Storage)**: Medya dosyaları için `chats` isminde "Public" bir bucket (kutu) oluşturun.
-4. **Yapay Zeka Ayarı**: Veritabanınızda `global_settings` adında bir tablo oluşturup, `id` kısmına `gemini_api_key`, `text_value` kısmına ise Google Gemini API anahtarınızı girin.
+4. **LiveKit Token Fonksiyonu**: `supabase/functions/livekit-token` Edge Function'ını deploy edin ve `LIVEKIT_API_KEY` / `LIVEKIT_API_SECRET` değerlerini Supabase secrets olarak tanımlayın. LiveKit API secret değerini frontend `.env` dosyasına koymayın.
+5. **Yapay Zeka Ayarı**: Veritabanınızda `global_settings` adında bir tablo oluşturup, `id` kısmına `gemini_api_key`, `text_value` kısmına ise Google Gemini API anahtarınızı girin.
 
 ### 5. Bilgisayarda Çalıştırma
 ```bash
