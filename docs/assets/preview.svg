@@ -1,0 +1,30 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" rx="26" fill="#101828"/>
+  <rect x="48" y="44" width="1104" height="542" rx="22" fill="#182230" stroke="#344054"/>
+  <rect x="84" y="84" width="210" height="462" rx="18" fill="#0B1220"/>
+  <rect x="324" y="84" width="536" height="462" rx="18" fill="#111827"/>
+  <rect x="890" y="84" width="226" height="462" rx="18" fill="#0B1220"/>
+  <text x="112" y="132" fill="#F8FAFC" font-family="Segoe UI, Arial" font-size="28" font-weight="700">BuddsApp</text>
+  <text x="112" y="174" fill="#94A3B8" font-family="Segoe UI, Arial" font-size="16">Workspaces</text>
+  <rect x="112" y="202" width="154" height="38" rx="10" fill="#2563EB"/>
+  <text x="132" y="227" fill="white" font-family="Segoe UI, Arial" font-size="15">general</text>
+  <rect x="112" y="254" width="154" height="38" rx="10" fill="#1F2937"/>
+  <text x="132" y="279" fill="#CBD5E1" font-family="Segoe UI, Arial" font-size="15">voice-room</text>
+  <text x="356" y="132" fill="#F8FAFC" font-family="Segoe UI, Arial" font-size="28" font-weight="700">Realtime Chat</text>
+  <rect x="356" y="176" width="360" height="54" rx="14" fill="#1F2937"/>
+  <text x="382" y="209" fill="#E5E7EB" font-family="Segoe UI, Arial" font-size="16">Onur: shipped the LiveKit token fix</text>
+  <rect x="444" y="252" width="382" height="54" rx="14" fill="#1D4ED8"/>
+  <text x="470" y="285" fill="white" font-family="Segoe UI, Arial" font-size="16">@AI summarize the workspace activity</text>
+  <rect x="356" y="328" width="320" height="54" rx="14" fill="#1F2937"/>
+  <text x="382" y="361" fill="#E5E7EB" font-family="Segoe UI, Arial" font-size="16">AI: 3 tasks, 1 voice room active</text>
+  <rect x="356" y="454" width="468" height="50" rx="14" fill="#0B1220" stroke="#344054"/>
+  <text x="382" y="486" fill="#94A3B8" font-family="Segoe UI, Arial" font-size="16">Message workspace...</text>
+  <text x="922" y="132" fill="#F8FAFC" font-family="Segoe UI, Arial" font-size="24" font-weight="700">Live</text>
+  <rect x="922" y="174" width="162" height="42" rx="12" fill="#065F46"/>
+  <text x="950" y="201" fill="#D1FAE5" font-family="Segoe UI, Arial" font-size="15">Voice room</text>
+  <rect x="922" y="236" width="162" height="42" rx="12" fill="#4C1D95"/>
+  <text x="950" y="263" fill="#DDD6FE" font-family="Segoe UI, Arial" font-size="15">Stories</text>
+  <rect x="922" y="298" width="162" height="42" rx="12" fill="#7C2D12"/>
+  <text x="950" y="325" fill="#FED7AA" font-family="Segoe UI, Arial" font-size="15">Roles</text>
+  <text x="84" y="578" fill="#94A3B8" font-family="Segoe UI, Arial" font-size="18">React + Supabase Realtime + LiveKit + Gemini + Edge Function token signing</text>
+</svg>
