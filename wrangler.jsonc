@@ -1,0 +1,9 @@
+// Cloudflare Workers: serves only the static landing page at buddsapp.onuracar.dev.
+// The React app itself is not deployed; see README for self-hosting.
+{
+  "name": "buddsapp",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./landing"
+  }
+}
