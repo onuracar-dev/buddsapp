@@ -27,7 +27,6 @@ export default function Admin() {
   const [publicRoomDescription, setPublicRoomDescription] = useState('');
   const [publicRoomYoutubeUrl, setPublicRoomYoutubeUrl] = useState('');
   const [selectedWorkspaceForRoom, setSelectedWorkspaceForRoom] = useState('');
-  const [geminiKey, setGeminiKey] = useState('');
   const [aiUsageCount, setAiUsageCount] = useState(0);
   const AI_DAILY_LIMIT = 1500;
 
@@ -59,9 +58,6 @@ export default function Admin() {
 
       const { data: annData } = await supabase.from('global_settings').select('*').like('id', 'announcement%');
       if (annData) setCurrentAnnouncements(annData.filter(a => a.is_active));
-
-      const { data: geminiData } = await supabase.from('global_settings').select('*').eq('id', 'gemini_api_key').single();
-      if (geminiData) setGeminiKey(geminiData.text_value || '');
 
       const today = new Date();
       today.setHours(0,0,0,0);
@@ -275,8 +271,8 @@ export default function Admin() {
   };
 
   const handleDeleteUser = async () => {
-    if (editingUser.email === import.meta.env.VITE_ADMIN_EMAIL) {
-      toast.error('Ana yönetici hesabını silemezsin!');
+    if (editingUser.role === 'admin') {
+      toast.error('Yönetici hesabını silemezsin!');
       return;
     }
     
@@ -351,24 +347,6 @@ export default function Admin() {
     }
   };
 
-  const saveGeminiKey = async () => {
-    setLoading(true);
-    try {
-      const { error } = await supabase.from('global_settings').upsert({
-        id: 'gemini_api_key',
-        text_value: geminiKey,
-        is_active: true,
-        updated_at: new Date().toISOString()
-      });
-      if (error) throw error;
-      toast.success('Gemini API Anahtarı kaydedildi!');
-    } catch (e) {
-      console.error(e);
-      toast.error('Anahtar kaydedilemedi: Güvenlik kuralları (RLS) engelledi. Supabase SQL üzerinden "gemini_api_key" satırını manuel ekleyin.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const formatDuration = (totalSeconds) => {
     if (totalSeconds < 60) return `${totalSeconds} sn`;
@@ -676,23 +654,7 @@ export default function Admin() {
 
         <div className="glass" style={{ padding: '20px', borderRadius: 'var(--radius-lg)', marginBottom: '20px' }}>
           <h3 style={{ margin: '0 0 15px 0', fontSize: '1.1rem', color: 'var(--text-primary)' }}>🤖 Budds AI (Gemini Entegrasyonu)</h3>
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '15px' }}>Sohbetlere katılan Yapay Zeka botunun çalışması için Google AI Studio (Gemini) API anahtarını buraya girin.</p>
-          <div className="flex-between" style={{ gap: '10px' }}>
-            <input 
-              type="password"
-              value={geminiKey}
-              onChange={(e) => setGeminiKey(e.target.value)}
-              placeholder="AIzaSy..."
-              style={{ flex: 1, padding: '10px', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', color: '#fff' }}
-            />
-            <button 
-              onClick={saveGeminiKey}
-              disabled={loading}
-              style={{ padding: '10px 20px', background: 'var(--accent)', color: '#fff', borderRadius: 'var(--radius-md)', fontWeight: 'bold' }}
-            >
-              Kaydet
-            </button>
-          </div>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '15px' }}>Budds AI API anahtarı Supabase Edge Function secret (GEMINI_API_KEY) olarak güvenli şekilde saklanmaktadır.</p>
           <div style={{ marginTop: '20px', padding: '15px', background: 'var(--surface)', borderRadius: 'var(--radius-md)', border: '1px solid rgba(255,255,255,0.05)' }}>
             <div className="flex-between" style={{ marginBottom: '8px' }}>
               <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Günlük Tahmini API Kullanımı</span>
@@ -814,7 +776,7 @@ export default function Admin() {
                       <span style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>{user.display_name} {isBanned && '⛔'}</span>
                       <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>@{user.username} • {user.role.toUpperCase()}</span>
                       <span style={{ fontSize: '0.75rem', color: 'var(--primary)', marginTop: '2px', fontWeight: '500' }}>
-                        📍 {user.email === import.meta.env.VITE_ADMIN_EMAIL ? 'Tüm Sunucular (Kurucu)' : (workspaces.find(ws => ws.id === user.workspace_id)?.name || 'Sunucu Atanmamış')}
+                        📍 {user.role === 'admin' ? 'Tüm Sunucular (Kurucu)' : (workspaces.find(ws => ws.id === user.workspace_id)?.name || 'Sunucu Atanmamış')}
                       </span>
                     </div>
                   </div>

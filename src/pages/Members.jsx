@@ -23,7 +23,7 @@ export default function Members() {
       const { data, error } = await supabase
         .from('users')
         .select('id, display_name, photo_url, badges, message_count')
-        .or(`workspace_id.eq.${activeWorkspaceId},email.eq.${import.meta.env.VITE_ADMIN_EMAIL}`)
+        .or(`workspace_id.eq.${activeWorkspaceId},role.eq.admin`)
         .order('message_count', { ascending: false });
 
       if (data) {

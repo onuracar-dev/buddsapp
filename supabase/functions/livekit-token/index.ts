@@ -73,6 +73,64 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Odada yetki / erişim kontrolü
+    const { data: userProfile } = await supabase
+      .from("users")
+      .select("id, role, workspace_id")
+      .eq("id", user.id)
+      .single();
+
+    const isAdmin = userProfile?.role === "admin";
+
+    if (!isAdmin) {
+      // 1. calls tablosunda bu odaya ait bir arama kaydı var mı?
+      const { data: callData } = await supabase
+        .from("calls")
+        .select("chat_id, caller_id")
+        .eq("room_name", roomName)
+        .maybeSingle();
+
+      let targetChatId = callData?.chat_id;
+
+      if (!targetChatId) {
+        const match = roomName.match(/^room_([^_]+)_/);
+        if (match) {
+          targetChatId = match[1];
+        }
+      }
+
+      if (targetChatId) {
+        const { data: chatData } = await supabase
+          .from("chats")
+          .select("id, workspace_id, participants, type")
+          .eq("id", targetChatId)
+          .maybeSingle();
+
+        if (!chatData) {
+          return new Response(JSON.stringify({ error: "Chat room not found" }), {
+            status: 404,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+
+        const isParticipant = Array.isArray(chatData.participants) && chatData.participants.includes(user.id);
+        const isCaller = callData?.caller_id === user.id;
+        const isSameWorkspace = chatData.workspace_id && userProfile?.workspace_id === chatData.workspace_id;
+
+        if (!isParticipant && !isCaller && !(chatData.type === "public_group" && isSameWorkspace)) {
+          return new Response(JSON.stringify({ error: "Access denied to this call room" }), {
+            status: 403,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+      } else {
+        return new Response(JSON.stringify({ error: "Access denied: room not found or unauthorized" }), {
+          status: 403,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
+
     const now = Math.floor(Date.now() / 1000);
     const token = await signLiveKitToken({
       iss: livekitApiKey,

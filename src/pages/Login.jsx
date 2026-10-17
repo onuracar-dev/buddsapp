@@ -23,12 +23,6 @@ export default function Login() {
   const verifyManualCode = async () => {
     if (!inviteCode.trim()) return;
 
-    if (inviteCode.trim() === import.meta.env.VITE_EASTER_EGG_PASS) {
-      setHasInvite(true);
-      toast.success('Gizli anahtar kabul edildi. Hoş geldin Diktatör! 👑');
-      return;
-    }
-
     setVerifying(true);
     try {
       const { data: invite, error } = await supabase

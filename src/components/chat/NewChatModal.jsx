@@ -28,7 +28,7 @@ export default function NewChatModal({ onClose }) {
         const { data, error } = await supabase
           .from('users')
           .select('*')
-          .or(`workspace_id.eq.${activeWorkspaceId},email.eq.${import.meta.env.VITE_ADMIN_EMAIL}`);
+          .or(`workspace_id.eq.${activeWorkspaceId},role.eq.admin`);
         if (error) throw error;
         
         const usersList = data.filter(doc => doc.id !== currentUser.id);

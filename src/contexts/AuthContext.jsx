@@ -37,12 +37,9 @@ export function AuthProvider({ children }) {
         return null;
       }
 
-      // Kullanıcının gerçek e-postasını Auth servisinden al (Users tablosunda boş olabilir)
-      const { data: authData } = await supabase.auth.getUser();
-      const userEmail = authData?.user?.email || null;
       if (!data) return null;
 
-      const isAdminUser = userEmail === import.meta.env.VITE_ADMIN_EMAIL;
+      const isAdminUser = data.role === 'admin';
 
       // Self-healing: PWA önbelleğe alma sorunları yüzünden workspace_id boş kalmışsa, invites tablosundan düzelt
       if (!data.workspace_id && !isAdminUser) {

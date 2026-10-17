@@ -25,12 +25,12 @@ BuddsApp is a full-product React application built on Supabase, LiveKit, and Gem
 | Frontend | React, Vite, custom CSS, Lucide icons |
 | Auth and data | Supabase Auth, PostgreSQL, Realtime, Storage |
 | Voice | LiveKit Cloud |
-| AI | Gemini API stored through app settings |
+| AI | Supabase Edge Function secret |
 | Server-side secret handling | Supabase Edge Functions |
 
 ## Security Note
 
-LiveKit token signing is handled by `supabase/functions/livekit-token`. The LiveKit API secret is not used in browser code and should be configured only as a Supabase Edge Function secret.
+LiveKit token signing and AI chat proxying are handled by Supabase Edge Functions (`livekit-token` and `ai-chat`). Neither the LiveKit API secret nor the Gemini API key is exposed in browser code; both must be configured as Supabase Edge Function secrets.
 
 ## Environment
 
@@ -40,8 +40,6 @@ Frontend `.env`:
 VITE_SUPABASE_URL=your_supabase_project_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 VITE_LIVEKIT_URL=wss://your-project.livekit.cloud
-VITE_ADMIN_EMAIL=admin@example.com
-VITE_EASTER_EGG_PASS=your_secret_password
 ```
 
 Supabase secrets:
@@ -49,6 +47,7 @@ Supabase secrets:
 ```bash
 supabase secrets set LIVEKIT_API_KEY=your_livekit_api_key
 supabase secrets set LIVEKIT_API_SECRET=your_livekit_api_secret
+supabase secrets set GEMINI_API_KEY=your_gemini_api_key
 ```
 
 ## Local Development

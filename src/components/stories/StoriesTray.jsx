@@ -50,7 +50,7 @@ export default function StoriesTray() {
         .from('users')
         .select('id, display_name, photo_url, workspace_id, email')
         .in('id', Array.from(userIds))
-        .or(`workspace_id.eq.${activeWorkspaceId},email.eq.${import.meta.env.VITE_ADMIN_EMAIL}`);
+        .or(`workspace_id.eq.${activeWorkspaceId},role.eq.admin`);
 
       if (usersData) {
         const infoMap = {};
