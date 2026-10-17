@@ -99,11 +99,11 @@ export default function CallRoom() {
   };
 
   if (!token) {
-    return <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#000', color: '#fff' }}>Bağlanıyor...</div>;
+    return <div className="call-room-loading">Bağlanıyor...</div>;
   }
 
   return (
-    <div style={{ height: '100vh', background: '#000' }}>
+    <div className="call-room-container">
       <LiveKitRoom
         video={true}
         audio={true}
@@ -111,7 +111,7 @@ export default function CallRoom() {
         serverUrl={import.meta.env.VITE_LIVEKIT_URL}
         onDisconnected={handleDisconnect}
         data-lk-theme="default"
-        style={{ height: '100vh' }}
+        className="call-room-lk"
       >
         <VideoConference />
         <RoomAudioRenderer />

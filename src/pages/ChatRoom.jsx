@@ -792,10 +792,10 @@ export default function ChatRoom() {
         </div>
       )}
 
-      <div className={`flex-col ${isShaking ? 'shake-screen' : ''} ${isFlipped ? 'flip-screen' : ''} chat-bg`} style={{ flex: 1, minHeight: 0, backgroundImage: chatInfo?.bg_url ? `url(${chatInfo.bg_url})` : undefined, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', overflow: 'hidden' }}>
+      <div className={`chat-room-layout ${isShaking ? 'shake-screen' : ''} ${isFlipped ? 'flip-screen' : ''} chat-bg`} style={{ backgroundImage: chatInfo?.bg_url ? `url(${chatInfo.bg_url})` : undefined, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
         
         {/* Header */}
-        <div className="flex-between glass" style={{ padding: '10px 15px', borderBottom: '1px solid var(--border)', zIndex: 10 }}>
+        <div className="chat-header-bar glass">
           <button onClick={() => navigate('/')} style={{ padding: '8px' }}><ArrowLeft size={24} color="var(--text-primary)" /></button>
           <label style={{ display: 'flex', cursor: chatInfo?.type.includes('group') && isAdmin ? 'pointer' : 'default' }}>
             <img 
@@ -812,8 +812,8 @@ export default function ChatRoom() {
               <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleGroupAvatarUpload} />
             )}
           </label>
-          <div className="flex-col" style={{ flex: 1 }}>
-            <span style={{ fontWeight: '600', color: 'var(--text-primary)', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div className="chat-header-meta">
+            <span className="chat-header-title">
               {chatInfo?.type.includes('group') ? (chatInfo?.name?.includes('||') ? chatInfo.name.split('||')[0].trim() : chatInfo?.name) : (spyName || otherUser?.display_name || 'Sohbet')}
               {isAdmin && chatInfo?.type.includes('group') && (
                 <button 
@@ -825,12 +825,12 @@ export default function ChatRoom() {
                 </button>
               )}
             </span>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+            <span className="chat-header-subtitle">
               {typingUsers.length > 0 ? <span style={{ color: 'var(--accent)', fontStyle: 'italic' }}>Yazıyor...</span> : (chatInfo?.type.includes('group') ? `${chatInfo?.participants?.length || 0} kişi` : 'Çevrimiçi')}
             </span>
           </div>
           
-          <div className="flex-center" style={{ gap: '15px', marginLeft: 'auto' }}>
+          <div className="chat-header-actions">
             {currentTrack?.roomId === chatId && (
               <button 
                 onClick={togglePlay}
@@ -872,7 +872,7 @@ export default function ChatRoom() {
           const isThisRoomPlaying = currentTrack?.roomId === chatId;
           
           return (
-            <div style={{ padding: '15px', background: 'linear-gradient(45deg, #0f172a, #000)', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '15px' }}>
+            <div className="chat-radio-banner">
               
               <div style={{ position: 'relative', width: '50px', height: '50px', borderRadius: '10px', overflow: 'hidden', boxShadow: '0 0 15px rgba(59, 130, 246, 0.4)', flexShrink: 0 }}>
                 {/* Sadece Görsel Kapak (Oynatıcı Globalde) */}
@@ -905,7 +905,7 @@ export default function ChatRoom() {
         })()}
 
         {/* Messages */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div className="chat-messages-scroll">
           {messagesLoading ? (
             <div style={{ textAlign: 'center', color: 'var(--text-tertiary)' }}>Mesajlar yükleniyor...</div>
           ) : messages.length === 0 ? (
@@ -919,7 +919,7 @@ export default function ChatRoom() {
               const senderName = getSenderName(msg);
 
               return (
-                <div key={msg.id} style={{ alignSelf: isMe ? 'flex-end' : 'flex-start', maxWidth: '75%', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+                <div key={msg.id} className={`chat-msg-row ${isMe ? 'is-me' : 'is-other'}`}>
                   
                   {showMenu && (
                     <div className="glass shadow-lg flex-center" style={{ position: 'absolute', top: '-45px', [isMe ? 'right' : 'left']: '0', padding: '8px', borderRadius: 'var(--radius-full)', gap: '10px', zIndex: 20 }}>
@@ -1187,7 +1187,7 @@ export default function ChatRoom() {
             <span style={{ color: 'var(--danger)', fontWeight: '600' }}>Öldün! 💀 {timeLeft} saniye banlısın.</span>
           </div>
         ) : (
-          <div className="glass flex-col" style={{ padding: '10px 15px', borderTop: '1px solid var(--border)', gap: '10px', zIndex: 10 }}>
+          <div className="glass chat-input-bar">
             
             <div className="flex-between" style={{ padding: '0 5px', flexWrap: 'wrap', gap: '10px' }}>
               <button onClick={() => setShowTrollMenu(!showTrollMenu)} title="Troll Özellikler" style={{ display: 'flex', alignItems: 'center', gap: '5px', color: 'var(--danger)', fontSize: '0.85rem', fontWeight: '500', background: 'rgba(239,68,68,0.1)', padding: '5px 10px', borderRadius: 'var(--radius-full)' }}>
@@ -1257,7 +1257,7 @@ export default function ChatRoom() {
                 </div>
               )}
             
-              <form onSubmit={sendMessage} style={{ flex: 1, display: 'flex', gap: '10px', minWidth: '250px' }}>
+              <form onSubmit={sendMessage} style={{ flex: 1, display: 'flex', gap: '8px', minWidth: '0', alignItems: 'center' }}>
                 {isRecording ? (
                   <div className="flex-between" style={{ flex: 1, color: 'var(--danger)', fontWeight: '500', gap: '10px' }}>
                     <div className="flex-center" style={{ gap: '10px' }}>
@@ -1266,13 +1266,13 @@ export default function ChatRoom() {
                     </div>
                   </div>
                 ) : (
-                  <input type="text" value={text} onChange={handleTyping} onFocus={handleInputFocus} placeholder={isAnonymous ? "Gizlice yaz..." : (isZalgo ? "L̵a̶n̶e̵t̷l̷i̴ ̷y̴a̵z̴.̶.̶." : "Bir mesaj yazın...")} style={{ flex: 1, padding: '12px 15px', borderRadius: 'var(--radius-full)', background: isAnonymous ? '#fff0f0' : 'var(--surface)', border: isAnonymous ? '1px solid var(--danger)' : '1px solid var(--border)', fontSize: '0.95rem' }} />
+                  <input type="text" value={text} onChange={handleTyping} onFocus={handleInputFocus} placeholder={isAnonymous ? "Gizlice yaz..." : (isZalgo ? "L̵a̶n̶e̵t̷l̷i̴ ̷y̴a̵z̴.̶.̶." : "Bir mesaj yazın...")} className="chat-text-input" />
                 )}
                 {text.trim() ? (
-                  <button type="submit" disabled={sending} className="flex-center shadow-md" style={{ width: '45px', height: '45px', borderRadius: '50%', background: isAnonymous ? 'var(--danger)' : (isZalgo ? '#8b5cf6' : 'var(--primary)'), color: '#fff', opacity: sending ? 0.7 : 1 }}><Send size={20} style={{ marginLeft: '2px' }} /></button>
+                  <button type="submit" disabled={sending} className="chat-send-btn shadow-md" style={{ background: isAnonymous ? 'var(--danger)' : (isZalgo ? '#8b5cf6' : 'var(--primary)'), opacity: sending ? 0.7 : 1 }}><Send size={18} style={{ marginLeft: '2px' }} /></button>
                 ) : (
-                  <button type="button" onClick={handleMicClick} className="flex-center shadow-md" style={{ width: '45px', height: '45px', borderRadius: '50%', background: isRecording ? 'var(--danger)' : 'var(--primary)', color: '#fff', transition: 'background 0.2s' }}>
-                    {isRecording ? <StopCircle size={20} /> : <Mic size={20} />}
+                  <button type="button" onClick={handleMicClick} className="chat-send-btn shadow-md" style={{ background: isRecording ? 'var(--danger)' : 'var(--primary)' }}>
+                    {isRecording ? <StopCircle size={18} /> : <Mic size={18} />}
                   </button>
                 )}
               </form>

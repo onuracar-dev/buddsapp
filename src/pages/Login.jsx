@@ -64,65 +64,40 @@ export default function Login() {
   };
 
   return (
-    <div className="flex-center" style={{ flex: 1, minHeight: 0, padding: '20px', background: 'var(--background)' }}>
-      <div className="glass flex-col" style={{
-        padding: '40px',
-        borderRadius: 'var(--radius-lg)',
-        width: '100%',
-        maxWidth: '400px',
-        textAlign: 'center',
-        boxShadow: 'var(--shadow-glass)'
-      }}>
-
-        <div style={{ marginBottom: '30px' }}>
-          <h1 className="animate-fade-in" style={{ fontSize: '2rem', marginBottom: '10px', color: 'var(--primary)' }}>BuddsApp</h1>
-          <p style={{ color: 'var(--text-secondary)' }}>Arkadaşlarına katılmak için giriş yap</p>
+    <div className="login-page">
+      <div className="glass flex-col login-card">
+        <div className="login-header">
+          <h1 className="animate-fade-in login-title">BuddsApp</h1>
+          <p className="login-subtitle">Arkadaşlarına katılmak için giriş yap</p>
         </div>
 
         {!hasInvite ? (
-          <div className="flex-col" style={{ gap: '15px' }}>
-            <p style={{ fontSize: '0.9rem', color: 'var(--warning)', fontWeight: 'bold' }}>Bu özel bir uygulamadır. Sadece davet edilenler girebilir.</p>
+          <div className="flex-col login-invite-box">
+            <p className="login-notice">Bu özel bir uygulamadır. Sadece davet edilenler girebilir.</p>
             <input
               type="text"
               placeholder="Davet Kodunu Girin"
               value={inviteCode}
               onChange={(e) => setInviteCode(e.target.value)}
               onFocus={handleInputFocus}
-              style={{ padding: '12px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)', background: 'var(--background)', color: 'var(--text-primary)', textAlign: 'center' }}
+              className="login-input"
             />
             <button
               onClick={verifyManualCode}
               disabled={verifying}
-              style={{
-                padding: '12px', background: 'var(--primary)', color: '#fff', borderRadius: 'var(--radius-md)', fontWeight: 'bold', opacity: verifying ? 0.7 : 1
-              }}
+              className="login-btn-primary"
             >
               {verifying ? 'Doğrulanıyor...' : 'Daveti Doğrula'}
             </button>
           </div>
         ) : (
-          <div className="flex-col" style={{ gap: '15px' }}>
+          <div className="flex-col login-invite-box">
             <button
               onClick={handleGoogleLogin}
               disabled={loading}
-              className="flex-center"
-              style={{
-                padding: '12px 20px',
-                borderRadius: 'var(--radius-md)',
-                background: 'var(--surface)',
-                border: '1px solid var(--border)',
-                fontSize: '1rem',
-                fontWeight: '500',
-                boxShadow: 'var(--shadow-sm)',
-                transition: 'transform 0.2s, box-shadow 0.2s',
-                gap: '10px',
-                opacity: loading ? 0.7 : 1,
-                cursor: loading ? 'not-allowed' : 'pointer'
-              }}
-              onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; }}
-              onMouseOut={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; }}
+              className="flex-center login-google-btn"
             >
-              <FcGoogle size={24} /> Google ile Giriş Yap
+              <FcGoogle size={22} /> Google ile Giriş Yap
             </button>
           </div>
         )}
