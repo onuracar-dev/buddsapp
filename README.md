@@ -1,107 +1,148 @@
 # BuddsApp
 
-Real-time community chat platform with workspaces, voice rooms, stories, roles, file sharing, and an AI companion.
+A group chat I built for my friends: invite-only workspaces, real-time messages, voice rooms, stories, and an AI bot that joins the conversation.
 
-<img src="./docs/assets/preview.svg" alt="BuddsApp product preview">
+**Project page:** [buddsapp.onuracar.dev](https://buddsapp.onuracar.dev)
+**Status:** not hosted. The code is here to read or to self-host with your own keys.
 
-BuddsApp is a full-product React application built on Supabase, LiveKit, and Gemini. It is designed like a lightweight Discord-style workspace where users can join communities, chat in real time, share files, start voice calls, and interact with an AI assistant.
+---
 
-## Product Surface
+## What it does
 
-- Workspace-based community structure
-- Supabase Auth and member profiles
-- Real-time chat through Supabase Realtime
-- LiveKit-powered voice rooms
-- Story-style media sharing
-- Role-based controls for admins/moderators/members
-- File sharing and document previews
-- Gemini-backed AI companion behavior
-- PWA-ready Vite build
+| Feature | How it works |
+| --- | --- |
+| **Workspaces** | Invite-only spaces. You only see the members, chats and stories of the workspace you joined. |
+| **Real-time chat** | Messages and typing state go over Supabase Realtime. Supports images, files, voice notes, doodles and an in-chat tic-tac-toe game. |
+| **Voice rooms** | LiveKit rooms for group calls. Tokens are signed on the server. |
+| **Budds AI** | A Gemini-backed bot you can call into any chat. It reads the last 15 messages and replies in character. |
+| **Stories** | Story-style photo and video posts, scoped to the workspace. |
+| **Admin panel** | Roles, invite codes, timed announcements and member management. |
+| **PWA** | Installable on phones, built with `vite-plugin-pwa`. |
 
 ## Architecture
 
-| Area | Implementation |
+There's no custom backend server. The browser talks to Supabase directly. Anything that needs a secret goes through an Edge Function.
+
+```
+                         ┌──────────── Supabase ────────────┐
+                         │  Auth (Google)                   │
+   ┌─────────┐  queries  │  Postgres + row-level security   │
+   │ Browser │──────────▶│  Realtime                        │
+   │  React  │           │  Storage                         │
+   │  Vite   │           │                                  │
+   │  PWA    │  invoke   │  Edge Functions                  │
+   └─────────┘──────────▶│   ├─ livekit-token ──── signs ───┼──▶ LiveKit Cloud
+        │       + JWT    │   └─ ai-chat ───────── calls ────┼──▶ Gemini API
+        │                └──────────────────────────────────┘
+        │                                                          ▲
+        └────────────── WebRTC audio with the signed token ────────┘
+```
+
+**Stack:** React 19, Vite, React Router, Supabase (Auth, Postgres, Realtime, Storage, Edge Functions), LiveKit, Gemini, i18next.
+
+## Security model
+
+The first version was written for a group of friends who trusted each other. Before publishing the code, I reviewed it as if a stranger would read the JavaScript bundle. Four things didn't hold up:
+
+| Problem | Fix |
 | --- | --- |
-| Frontend | React, Vite, custom CSS, Lucide icons |
-| Auth and data | Supabase Auth, PostgreSQL, Realtime, Storage |
-| Voice | LiveKit Cloud |
-| AI | Supabase Edge Function secret |
-| Server-side secret handling | Supabase Edge Functions |
+| The LiveKit API secret was a `VITE_` variable, so it shipped in the bundle. Anyone could mint room tokens. | Token signing moved to the `livekit-token` Edge Function. It also checks that the caller belongs to the chat. |
+| The Gemini key sat in a `global_settings` row that the client read. Any signed-in user could see it. | Requests go through the `ai-chat` Edge Function. The model is fixed on the server, request size is capped, and the migration deletes the old row. |
+| "Admin" meant comparing the user's email to `VITE_ADMIN_EMAIL`. A hard-coded password in the bundle could skip the invite step. | Admin is now a `role` column. A trigger blocks users from changing their own `role` or `workspace_id`. |
+| The client read the `invites` table directly, so unused codes could be listed. | Invites are admin-only. Joining goes through `redeem_invite()`, a `security definer` function that validates the code, marks it used and assigns the workspace in one step. |
 
-## Security Note
+**Where secrets live:**
 
-LiveKit token signing and AI chat proxying are handled by Supabase Edge Functions (`livekit-token` and `ai-chat`). Neither the LiveKit API secret nor the Gemini API key is exposed in browser code; both must be configured as Supabase Edge Function secrets.
+| Value | Where | Visible to the browser? |
+| --- | --- | --- |
+| `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` | `.env` | Yes, by design. Access is enforced by RLS. |
+| `VITE_LIVEKIT_URL` | `.env` | Yes. It's only the WebSocket address. |
+| `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET` | Edge Function secrets | No |
+| `GEMINI_API_KEY`, `GEMINI_MODEL` | Edge Function secrets | No |
 
-## Environment
+> **Not verified yet:** the policies in `supabase/migrations/0001_rls_policies.sql` were written and reviewed, but they haven't been run against a live database.
 
-Frontend `.env`:
+## Project structure
+
+```
+src/
+  pages/          Route-level screens (ChatRoom, Home, Admin, Login, Invite, ...)
+  components/     Chat, call, story and shared UI pieces
+  contexts/       Auth, theme and music player state
+  hooks/          Chat list and message subscriptions
+  services/       AI client (calls the ai-chat function)
+  utils/          LiveKit token client, helpers
+supabase/
+  functions/      livekit-token, ai-chat (Deno)
+  migrations/     RLS policies, trigger, redeem_invite()
+  seed.sql        Demo workspace, users, invite and messages
+landing/          Static project page served at buddsapp.onuracar.dev
+```
+
+## Running it yourself
+
+You'll need free accounts on [Supabase](https://supabase.com), [LiveKit Cloud](https://livekit.io/cloud) and [Google AI Studio](https://aistudio.google.com), plus the [Supabase CLI](https://supabase.com/docs/guides/cli).
+
+> **Heads-up:** the table schema isn't in the repo yet. `0001_rls_policies.sql` adds policies to tables it expects to already exist (`users`, `workspaces`, `chats`, `messages`, `calls`, `invites`, `stories`, `global_settings`, `app_settings`). A fresh project needs those tables first.
+
+**1. Install**
+
+```bash
+git clone https://github.com/onuracar-dev/buddsapp
+cd buddsapp
+npm install
+```
+
+**2. Frontend environment.** Copy `.env.example` to `.env` and fill it in:
 
 ```env
-VITE_SUPABASE_URL=your_supabase_project_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key
 VITE_LIVEKIT_URL=wss://your-project.livekit.cloud
 ```
 
-Supabase secrets:
+**3. Server secrets and functions**
 
 ```bash
-supabase secrets set LIVEKIT_API_KEY=your_livekit_api_key
-supabase secrets set LIVEKIT_API_SECRET=your_livekit_api_secret
-supabase secrets set GEMINI_API_KEY=your_gemini_api_key
-# Opsiyonel: Varsayılan model (gemini-3.5-flash) dışında bir model belirtmek için:
-supabase secrets set GEMINI_MODEL=gemini-3.5-flash
+supabase secrets set LIVEKIT_API_KEY=... LIVEKIT_API_SECRET=... GEMINI_API_KEY=...
+supabase secrets set GEMINI_MODEL=gemini-3.5-flash   # optional, this is the default
+supabase functions deploy livekit-token
+supabase functions deploy ai-chat
 ```
 
-## Demo Verisiyle Çalıştırma
+**4. Database.** In the Supabase SQL editor, run `supabase/migrations/0001_rls_policies.sql`.
 
-Projeyi yerel ortamda veya test veritabanında hazır demo verileriyle çalıştırmak için:
+**5. Demo data (optional)**
 
-1. **Supabase Auth Kullanıcısı Oluşturun:**
-   - Supabase Dashboard -> **Authentication** -> **Users** sekmesinden `demo1@example.com` adresiyle bir kullanıcı oluşturun.
-   - Oluşturulan kullanıcının `User UID` değerini kopyalayıp `supabase/seed.sql` dosyasında `Demo User 1` için `id` alanına yazın.
-2. **Migration Dosyasını Uygulayın:**
-   - Supabase SQL Editöründe `supabase/migrations/0001_rls_policies.sql` dosyasını çalıştırın.
-3. **Demo Verilerini İçeri Aktarın:**
-   - Supabase SQL Editöründe `supabase/seed.sql` dosyasını çalıştırın.
-4. Bu işlem şunları oluşturur:
-   - **Demo Workspace** çalışma alanı (`00000000-0000-0000-0000-000000000001`)
-   - 5 sahte kullanıcı profili (`Demo User 1` - `Demo User 5`)
-   - `00000000-0000-0000-0000-0000000000b1` geçerli demo davet kodu
-   - "Genel Sohbet" kanalında 24 adet örnek sohbet mesajı
+1. In **Authentication → Users**, create a user with the email `demo1@example.com`.
+2. Paste that user's UID into `supabase/seed.sql` as the `id` of `Demo User 1`.
+3. Run `supabase/seed.sql`.
 
-## Local Development
+This creates a "Demo Workspace", five demo profiles, a chat with sample messages, and the invite code `00000000-0000-0000-0000-0000000000b1`.
+
+**6. Start**
 
 ```bash
-npm install
 npm run dev
 ```
 
-## Validation
+## Scripts
 
-```bash
-npm run lint
-npm run build
-```
+| Command | What it does |
+| --- | --- |
+| `npm run dev` | Start the Vite dev server |
+| `npm run build` | Production build into `dist/` |
+| `npm run preview` | Serve the production build locally |
+| `npm run lint` | ESLint. Two `exhaustive-deps` warnings in `ChatRoom.jsx` are intentional: adding the dependencies would reconnect the Realtime channel on every state change. |
 
-`npm run lint` currently passes with warnings that are useful cleanup candidates.
+## Known limitations
 
-## Recent Hardening
-
-- Removed LiveKit API secret usage from browser code
-- Added Supabase Edge Function token signing
-- Proxied Gemini requests through Supabase Edge Function with input payload limits
-- Migrated authorization to database role checks and PostgreSQL RLS policies
-- Secured invite system via `redeem_invite` security definer RPC
-- Removed generated build and scratch artifacts from source control
-- Updated environment guidance to avoid leaking voice and AI infrastructure secrets
-
-## Roadmap
-
-- Add real screenshots from a seeded workspace
-- Split large chat-room logic into smaller modules
-- Add focused integration tests for invite and voice-call flows
-- Add deployment notes for Supabase/Vercel setup
+- The table schema isn't exported to the repo yet (see above).
+- RLS policies haven't been tested against a live database.
+- `ChatRoom.jsx` is about 1,300 lines and should be split up.
+- i18next is set up with a small English/Turkish dictionary, but most UI text is still hard-coded in Turkish.
+- There are no automated tests.
 
 ## Author
 
-Onur Acar - <https://github.com/onuracar-dev>
+Onur Acar · [onuracar.dev](https://onuracar.dev) · [GitHub](https://github.com/onuracar-dev)
