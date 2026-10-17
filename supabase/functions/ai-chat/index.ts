@@ -50,7 +50,32 @@ Deno.serve(async (req) => {
     }
 
     const reqBody = await req.json();
-    const model = reqBody.model || "gemini-1.5-flash";
+
+    // Contents toplam metin uzunluğunu hesapla (maksimum 20.000 karakter)
+    const contents = Array.isArray(reqBody.contents) ? reqBody.contents : [];
+    let totalTextLength = 0;
+
+    for (const item of contents) {
+      if (item && Array.isArray(item.parts)) {
+        for (const part of item.parts) {
+          if (part && typeof part.text === "string") {
+            totalTextLength += part.text.length;
+          }
+        }
+      } else if (typeof item === "string") {
+        totalTextLength += item.length;
+      }
+    }
+
+    if (totalTextLength > 20000) {
+      return new Response(JSON.stringify({ error: "Payload Too Large: contents exceed 20,000 characters limit" }), {
+        status: 413,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Model client'tan alınmaz, ortam değişkeninden okunur veya varsayılana düşer
+    const model = Deno.env.get("GEMINI_MODEL") ?? "gemini-3.5-flash";
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiApiKey}`;
 
     const geminiRes = await fetch(endpoint, {

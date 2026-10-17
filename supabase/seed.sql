@@ -1,71 +1,75 @@
 -- BuddsApp Demo Seed Verisi
 -- 1 Demo Workspace, 5 Sahte Kullanıcı Profili ve Doğal Bir Sohbet Geçmişi
+--
+-- ÖNEMLİ: public.users.id kolonu auth.users tablosuna foreign key ile bağlı olabilir.
+-- Bu seed dosyasını çalıştırmadan önce Supabase Dashboard -> Authentication -> Users sekmesinden
+-- demo kullanıcıları (özellikle demo1@example.com) oluşturun ve üretilen Auth UUID değerlerini
+-- aşağıdaki users tablosundaki id alanlarına yazın.
 
 -- 1. Workspace
 insert into public.workspaces (id, name, created_at)
 values 
-  ('a0000000-0000-0000-0000-000000000001', 'Demo Workspace', now() - interval '7 days')
+  ('00000000-0000-0000-0000-000000000001', 'Demo Workspace', now() - interval '7 days')
 on conflict (id) do update set name = excluded.name;
 
 -- 2. Demo Kullanıcı Profilleri
 insert into public.users (id, display_name, username, email, role, photo_url, workspace_id, message_count, last_seen, created_at)
 values
-  ('u0000000-0000-0000-0000-000000000001', 'Demo User 1', 'demo_admin', 'demo1@example.com', 'admin', 'https://api.dicebear.com/7.x/avataaars/svg?seed=demo1', 'a0000000-0000-0000-0000-000000000001', 12, now(), now() - interval '7 days'),
-  ('u0000000-0000-0000-0000-000000000002', 'Demo User 2', 'demo_user2', 'demo2@example.com', 'member', 'https://api.dicebear.com/7.x/avataaars/svg?seed=demo2', 'a0000000-0000-0000-0000-000000000001', 8, now() - interval '10 minutes', now() - interval '6 days'),
-  ('u0000000-0000-0000-0000-000000000003', 'Demo User 3', 'demo_user3', 'demo3@example.com', 'member', 'https://api.dicebear.com/7.x/avataaars/svg?seed=demo3', 'a0000000-0000-0000-0000-000000000001', 5, now() - interval '30 minutes', now() - interval '5 days'),
-  ('u0000000-0000-0000-0000-000000000004', 'Demo User 4', 'demo_user4', 'demo4@example.com', 'member', 'https://api.dicebear.com/7.x/avataaars/svg?seed=demo4', 'a0000000-0000-0000-0000-000000000001', 4, now() - interval '1 hour', now() - interval '4 days'),
-  ('u0000000-0000-0000-0000-000000000005', 'Demo User 5', 'demo_user5', 'demo5@example.com', 'member', 'https://api.dicebear.com/7.x/avataaars/svg?seed=demo5', 'a0000000-0000-0000-0000-000000000001', 3, now() - interval '2 hours', now() - interval '3 days')
+  ('00000000-0000-0000-0000-0000000000a1', 'Demo User 1', 'demo_admin', 'demo1@example.com', 'admin', 'https://api.dicebear.com/7.x/avataaars/svg?seed=demo1', '00000000-0000-0000-0000-000000000001', 12, now(), now() - interval '7 days'),
+  ('00000000-0000-0000-0000-0000000000a2', 'Demo User 2', 'demo_user2', 'demo2@example.com', 'member', 'https://api.dicebear.com/7.x/avataaars/svg?seed=demo2', '00000000-0000-0000-0000-000000000001', 8, now() - interval '10 minutes', now() - interval '6 days'),
+  ('00000000-0000-0000-0000-0000000000a3', 'Demo User 3', 'demo_user3', 'demo3@example.com', 'member', 'https://api.dicebear.com/7.x/avataaars/svg?seed=demo3', '00000000-0000-0000-0000-000000000001', 5, now() - interval '30 minutes', now() - interval '5 days'),
+  ('00000000-0000-0000-0000-0000000000a4', 'Demo User 4', 'demo_user4', 'demo4@example.com', 'member', 'https://api.dicebear.com/7.x/avataaars/svg?seed=demo4', '00000000-0000-0000-0000-000000000001', 4, now() - interval '1 hour', now() - interval '4 days'),
+  ('00000000-0000-0000-0000-0000000000a5', 'Demo User 5', 'demo_user5', 'demo5@example.com', 'member', 'https://api.dicebear.com/7.x/avataaars/svg?seed=demo5', '00000000-0000-0000-0000-000000000001', 3, now() - interval '2 hours', now() - interval '3 days')
 on conflict (id) do update set 
   display_name = excluded.display_name,
   role = excluded.role,
   workspace_id = excluded.workspace_id;
 
--- 3. Demo Davet Kodu
+-- 3. Demo Davet Kodu (Valid Hex UUID)
 insert into public.invites (id, workspace_id, created_by, used, created_at)
 values
-  ('DEMO-INVITE-2026', 'a0000000-0000-0000-0000-000000000001', 'u0000000-0000-0000-0000-000000000001', false, now())
+  ('00000000-0000-0000-0000-0000000000b1', '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-0000000000a1', false, now())
 on conflict (id) do nothing;
 
 -- 4. Demo Sohbet Odası (Genel Kanal)
 insert into public.chats (id, name, type, workspace_id, participants, allow_speaking, last_message, created_at)
 values
   (
-    'c0000000-0000-0000-0000-000000000001',
+    '00000000-0000-0000-0000-0000000000c1',
     'Genel Sohbet',
     'public_group',
-    'a0000000-0000-0000-0000-000000000001',
-    array['u0000000-0000-0000-0000-000000000001', 'u0000000-0000-0000-0000-000000000002', 'u0000000-0000-0000-0000-000000000003', 'u0000000-0000-0000-0000-000000000004', 'u0000000-0000-0000-0000-000000000005'],
+    '00000000-0000-0000-0000-000000000001',
+    array['00000000-0000-0000-0000-0000000000a1', '00000000-0000-0000-0000-0000000000a2', '00000000-0000-0000-0000-0000000000a3', '00000000-0000-0000-0000-0000000000a4', '00000000-0000-0000-0000-0000000000a5'],
     true,
-    jsonb_build_object('text', 'Yayın hazırlıkları tamam, repoyu inceleyebilirsiniz.', 'senderUid', 'u0000000-0000-0000-0000-000000000001', 'timestamp', now()),
+    jsonb_build_object('text', 'Yayın hazırlıkları tamam, repoyu inceleyebilirsiniz.', 'senderUid', '00000000-0000-0000-0000-0000000000a1', 'timestamp', now()),
     now() - interval '2 days'
   )
 on conflict (id) do update set name = excluded.name;
 
--- 5. Doğal Sohbet Mesajları (24 Mesaj)
+-- 5. Doğal Sohbet Mesajları (24 Mesaj - Valid Hex UUIDs)
 insert into public.messages (id, chat_id, sender_uid, type, content, read_by, created_at)
 values
-  ('m0000000-0000-0000-0000-000000000001', 'c0000000-0000-0000-0000-000000000001', 'u0000000-0000-0000-0000-000000000001', 'text', 'Selam herkese! Demo workspace ortamına hoş geldiniz.', array['u0000000-0000-0000-0000-000000000001', 'u0000000-0000-0000-0000-000000000002'], now() - interval '180 minutes'),
-  ('m0000000-0000-0000-0000-000000000002', 'c0000000-0000-0000-0000-000000000001', 'u0000000-0000-0000-0000-000000000002', 'text', 'Hoş bulduk! Edge function geçişi tamamlandı mı?', array['u0000000-0000-0000-0000-000000000001', 'u0000000-0000-0000-0000-000000000002'], now() - interval '175 minutes'),
-  ('m0000000-0000-0000-0000-000000000003', 'c0000000-0000-0000-0000-000000000001', 'u0000000-0000-0000-0000-000000000001', 'text', 'Evet, hem LiveKit token üretimi hem de Gemini AI proxy fonksiyonu Edge Functions tarafına taşındı.', array['u0000000-0000-0000-0000-000000000001'], now() - interval '170 minutes'),
-  ('m0000000-0000-0000-0000-000000000004', 'c0000000-0000-0000-0000-000000000003', 'text', 'Böylece tarayıcı bundle içerisine hiçbir secret sızmıyor, çok iyi olmuş.', array['u0000000-0000-0000-0000-000000000001'], now() - interval '165 minutes'),
-  ('m0000000-0000-0000-0000-000000000005', 'c0000000-0000-0000-0000-000000000001', 'ai_bot', 'Secret yönetimi dediğin böyle olur kanka. Client tarafına anahtar bırakılmaz! 😎', array['u0000000-0000-0000-0000-000000000001'], now() - interval '164 minutes'),
-  ('m0000000-0000-0000-0000-000000000006', 'c0000000-0000-0000-0000-000000000004', 'text', 'Budds AI da hemen lafa girdi haha 😂', array['u0000000-0000-0000-0000-000000000001'], now() - interval '160 minutes'),
-  ('m0000000-0000-0000-0000-000000000007', 'c0000000-0000-0000-0000-000000000002', 'text', 'Sesli oda bağlantılarını test ettiniz mi?', array['u0000000-0000-0000-0000-000000000001'], now() - interval '150 minutes'),
-  ('m0000000-0000-0000-0000-000000000008', 'c0000000-0000-0000-0000-000000000001', 'text', 'Evet, LiveKit Room entegrasyonu gayet stabil çalışıyor. Yetkilendirme kontrolü de Edge Function içinde yapılıyor.', array['u0000000-0000-0000-0000-000000000001'], now() - interval '145 minutes'),
-  ('m0000000-0000-0000-0000-000000000009', 'c0000000-0000-0000-0000-000000000005', 'text', 'Mobil görünümde 375px genişlikte denediniz mi hiç?', array['u0000000-0000-0000-0000-000000000001'], now() - interval '130 minutes'),
-  ('m0000000-0000-0000-0000-000000000010', 'c0000000-0000-0000-0000-000000000003', 'text', 'Evet, yatay kaydırma tamamen kaldırıldı, mesaj balonları ve input bar dar ekrana tam oturuyor.', array['u0000000-0000-0000-0000-000000000001'], now() - interval '125 minutes'),
-  ('m0000000-0000-0000-0000-000000000011', 'c0000000-0000-0000-0000-000000000004', 'text', 'Arayüzdeki tasarım token seti de index.css içinde tek bir `:root` yapısında toplandı.', array['u0000000-0000-0000-0000-000000000001'], now() - interval '110 minutes'),
-  ('m0000000-0000-0000-0000-000000000012', 'c0000000-0000-0000-0000-000000000002', 'text', 'RLS politikaları hangi tabloları kapsıyor şu an?', array['u0000000-0000-0000-0000-000000000001'], now() - interval '100 minutes'),
-  ('m0000000-0000-0000-0000-000000000013', 'c0000000-0000-0000-0000-000000000001', 'text', 'users, workspaces, chats, messages, calls, invites, stories ve global_settings. Her kullanıcı yalnızca kendi çalışma alanını görebiliyor.', array['u0000000-0000-0000-0000-000000000001'], now() - interval '95 minutes'),
-  ('m0000000-0000-0000-0000-000000000014', 'c0000000-0000-0000-0000-000000000003', 'text', 'Admin yetkisi de email karşılaştırması yerine veritabanındaki role kolonuna bağlandı.', array['u0000000-0000-0000-0000-000000000001'], now() - interval '80 minutes'),
-  ('m0000000-0000-0000-0000-000000000015', 'c0000000-0000-0000-0000-000000000005', 'text', 'Peki self-host etmek isteyen biri ne yapacak?', array['u0000000-0000-0000-0000-000000000001'], now() - interval '70 minutes'),
-  ('m0000000-0000-0000-0000-000000000016', 'c0000000-0000-0000-0000-000000000001', 'text', 'README ve landing sayfasındaki adımları izleyecek: Supabase projesi oluşturup SQL migration ve seed dosyasını çalıştıracak, ortam değişkenlerini girecek.', array['u0000000-0000-0000-0000-000000000001'], now() - interval '65 minutes'),
-  ('m0000000-0000-0000-0000-000000000017', 'c0000000-0000-0000-0000-000000000002', 'text', 'Gerçekten çok temiz ve yalın bir mimari oldu.', array['u0000000-0000-0000-0000-000000000001'], now() - interval '50 minutes'),
-  ('m0000000-0000-0000-0000-000000000018', 'c0000000-0000-0000-0000-000000000004', 'text', 'Tanıtım sitesi de hazır mı?', array['u0000000-0000-0000-0000-000000000001'], now() - interval '40 minutes'),
-  ('m0000000-0000-0000-0000-000000000019', 'c0000000-0000-0000-0000-000000000001', 'text', 'Evet, landing/ altında bağımsız statik bir sayfa olarak buddsapp.onuracar.dev adresine deploy edilecek.', array['u0000000-0000-0000-0000-000000000001'], now() - interval '35 minutes'),
-  ('m0000000-0000-0000-0000-000000000020', 'c0000000-0000-0000-0000-000000000003', 'text', 'Tüm mühendislik kararları ve mimari diyagramı da yer alıyor mu?', array['u0000000-0000-0000-0000-000000000001'], now() - interval '20 minutes'),
-  ('m0000000-0000-0000-0000-000000000021', 'c0000000-0000-0000-0000-000000000001', 'text', 'Evet, problem-çözüm kartları ve inline SVG mimari şeması dahil edildi.', array['u0000000-0000-0000-0000-000000000001'], now() - interval '15 minutes'),
-  ('m0000000-0000-0000-0000-000000000022', 'c0000000-0000-0000-0000-000000000002', 'text', 'Elinize sağlık!', array['u0000000-0000-0000-0000-000000000001'], now() - interval '10 minutes'),
-  ('m0000000-0000-0000-0000-000000000023', 'c0000000-0000-0000-0000-000000000005', 'text', 'Son kontrolleri yapıp yayına geçebiliriz o zaman.', array['u0000000-0000-0000-0000-000000000001'], now() - interval '5 minutes'),
-  ('m0000000-0000-0000-0000-000000000024', 'c0000000-0000-0000-0000-000000000001', 'text', 'Yayın hazırlıkları tamam, repoyu inceleyebilirsiniz.', array['u0000000-0000-0000-0000-000000000001'], now())
-on conflict (id) do nothing;
+  ('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000000a1', 'text', 'Selam herkese! Demo workspace ortamına hoş geldiniz.', array['00000000-0000-0000-0000-0000000000a1', '00000000-0000-0000-0000-0000000000a2'], now() - interval '180 minutes'),
+  ('00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000000a2', 'text', 'Hoş bulduk! Edge function geçişi tamamlandı mı?', array['00000000-0000-0000-0000-0000000000a1', '00000000-0000-0000-0000-0000000000a2'], now() - interval '175 minutes'),
+  ('00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000000a1', 'text', 'Evet, hem LiveKit token üretimi hem de Gemini AI proxy fonksiyonu Edge Functions tarafına taşındı.', array['00000000-0000-0000-0000-0000000000a1'], now() - interval '170 minutes'),
+  ('00000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000000a3', 'text', 'Böylece tarayıcı bundle içerisine hiçbir secret sızmıyor, çok iyi olmuş.', array['00000000-0000-0000-0000-0000000000a1'], now() - interval '165 minutes'),
+  ('00000000-0000-0000-0000-000000000005', '00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000000a1', 'ai_bot', 'Secret yönetimi dediğin böyle olur kanka. Client tarafına anahtar bırakılmaz! 😎', array['00000000-0000-0000-0000-0000000000a1'], now() - interval '164 minutes'),
+  ('00000000-0000-0000-0000-000000000006', '00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000000a4', 'text', 'Budds AI da hemen lafa girdi haha 😂', array['00000000-0000-0000-0000-0000000000a1'], now() - interval '160 minutes'),
+  ('00000000-0000-0000-0000-000000000007', '00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000000a2', 'text', 'Sesli oda bağlantılarını test ettiniz mi?', array['00000000-0000-0000-0000-0000000000a1'], now() - interval '150 minutes'),
+  ('00000000-0000-0000-0000-000000000008', '00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000000a1', 'text', 'Evet, LiveKit Room entegrasyonu gayet stabil çalışıyor. Yetkilendirme kontrolü de Edge Function içinde yapılıyor.', array['00000000-0000-0000-0000-0000000000a1'], now() - interval '145 minutes'),
+  ('00000000-0000-0000-0000-000000000009', '00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000000a5', 'text', 'Mobil görünümde 375px genişlikte denediniz mi hiç?', array['00000000-0000-0000-0000-0000000000a1'], now() - interval '130 minutes'),
+  ('00000000-0000-0000-0000-00000000000a', '00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000000a3', 'text', 'Evet, yatay kaydırma tamamen kaldırıldı, mesaj balonları ve input bar dar ekrana tam oturuyor.', array['00000000-0000-0000-0000-0000000000a1'], now() - interval '125 minutes'),
+  ('00000000-0000-0000-0000-00000000000b', '00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000000a4', 'text', 'Arayüzdeki tasarım token seti de index.css içinde tek bir `:root` yapısında toplandı.', array['00000000-0000-0000-0000-0000000000a1'], now() - interval '110 minutes'),
+  ('00000000-0000-0000-0000-00000000000c', '00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000000a2', 'text', 'RLS politikaları hangi tabloları kapsıyor şu an?', array['00000000-0000-0000-0000-0000000000a1'], now() - interval '100 minutes'),
+  ('00000000-0000-0000-0000-00000000000d', '00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000000a1', 'text', 'users, workspaces, chats, messages, calls, invites, stories ve global_settings. Her kullanıcı yalnızca kendi çalışma alanını görebiliyor.', array['00000000-0000-0000-0000-0000000000a1'], now() - interval '95 minutes'),
+  ('00000000-0000-0000-0000-00000000000e', '00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000000a3', 'text', 'Admin yetkisi de email karşılaştırması yerine veritabanındaki role kolonuna bağlandı.', array['00000000-0000-0000-0000-0000000000a1'], now() - interval '80 minutes'),
+  ('00000000-0000-0000-0000-00000000000f', '00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000000a5', 'text', 'Davet kodları da artık redeem_invite RPC fonksiyonu üzerinden işleniyor.', array['00000000-0000-0000-0000-0000000000a1'], now() - interval '70 minutes'),
+  ('00000000-0000-0000-0000-000000000010', '00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000000a1', 'text', 'Aynen öyle, invites tablosuna doğrudan erişim sadece admin rolüne açık.', array['00000000-0000-0000-0000-0000000000a1'], now() - interval '60 minutes'),
+  ('00000000-0000-0000-0000-000000000011', '00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000000a4', 'text', 'PWA önbelleği de düzgün senkronize oluyor mu?', array['00000000-0000-0000-0000-0000000000a1'], now() - interval '50 minutes'),
+  ('00000000-0000-0000-0000-000000000012', '00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000000a2', 'text', 'Vite PWA plugin devrede, service worker güncelleme akışı pürüzsüz.', array['00000000-0000-0000-0000-0000000000a1'], now() - interval '40 minutes'),
+  ('00000000-0000-0000-0000-000000000013', '00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000000a1', 'ai_bot', 'PWA dedin de aklıma geldi, masaüstüne yükleyip tam ekran kullanınca yağ gibi akıyor! 🚀', array['00000000-0000-0000-0000-0000000000a1'], now() - interval '39 minutes'),
+  ('00000000-0000-0000-0000-000000000014', '00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000000a3', 'text', 'Haha Budds AI haklı. Responsive tarafta da padding ve marginler çok temiz oturdu.', array['00000000-0000-0000-0000-0000000000a1'], now() - interval '30 minutes'),
+  ('00000000-0000-0000-0000-000000000015', '00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000000a5', 'text', 'GitHub repo dokümantasyonu da self-host adımlarıyla birlikte güncellendi mi?', array['00000000-0000-0000-0000-0000000000a1'], now() - interval '20 minutes'),
+  ('00000000-0000-0000-0000-000000000016', '00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000000a1', 'text', 'Evet, hem README hem de landing showcase sayfası adım adım self-host talimatlarını içeriyor.', array['00000000-0000-0000-0000-0000000000a1'], now() - interval '15 minutes'),
+  ('00000000-0000-0000-0000-000000000017', '00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000000a2', 'text', 'Harika iş! Eline sağlık herkesin.', array['00000000-0000-0000-0000-0000000000a1'], now() - interval '5 minutes'),
+  ('00000000-0000-0000-0000-000000000018', '00000000-0000-0000-0000-0000000000c1', '00000000-0000-0000-0000-0000000000a1', 'text', 'Yayın hazırlıkları tamam, repoyu inceleyebilirsiniz.', array['00000000-0000-0000-0000-0000000000a1'], now() - interval '1 minute');

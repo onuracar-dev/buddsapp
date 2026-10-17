@@ -6,7 +6,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { supabase } from '../supabase';
 
 export default function Login() {
-  const { loginWithGoogle } = useAuth();
+  const { loginWithGoogle, currentUser } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [inviteCode, setInviteCode] = useState('');
@@ -21,30 +21,26 @@ export default function Login() {
   };
 
   const verifyManualCode = async () => {
-    if (!inviteCode.trim()) return;
+    const code = inviteCode.trim();
+    if (!code) return;
 
     setVerifying(true);
     try {
-      const { data: invite, error } = await supabase
-        .from('invites')
-        .select('*')
-        .eq('id', inviteCode.trim())
-        .single();
-
-      if (error || !invite) {
-        toast.error('Geçersiz davet kodu.');
-        return;
+      if (currentUser) {
+        const { error } = await supabase.rpc('redeem_invite', { code });
+        if (error) {
+          toast.error('Geçersiz veya kullanılmış davet kodu.');
+          return;
+        }
+        toast.success('Davet kodu onaylandı! Yönlendiriliyorsunuz...');
+        navigate('/');
+      } else {
+        localStorage.setItem('budds_invite_token', code);
+        setHasInvite(true);
+        toast.success('Davet kodu kaydedildi! Şimdi giriş yapabilirsin.');
       }
-      if (invite.used) {
-        toast.error('Bu davet kodu daha önce kullanılmış.');
-        return;
-      }
-
-      localStorage.setItem('budds_invite_token', invite.id);
-      setHasInvite(true);
-      toast.success('Davet doğrulandı! Şimdi giriş yapabilirsin.');
     } catch (_e) {
-      toast.error('Kod doğrulanırken hata oluştu.');
+      toast.error('Kod işlenirken hata oluştu.');
     } finally {
       setVerifying(false);
     }

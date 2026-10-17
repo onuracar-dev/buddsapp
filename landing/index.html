@@ -36,7 +36,6 @@
         <span>BuddsApp</span>
       </a>
       <nav class="nav-links">
-        <a href="#demo">Demo</a>
         <a href="#mimari">Mimari</a>
         <a href="#muhendislik">Mühendislik</a>
         <a href="#self-host">Self-Host</a>
@@ -83,54 +82,12 @@
       </div>
     </section>
 
-    <!-- Demo Section -->
-    <section id="demo" class="section">
+    <!-- Ekran Görüntüsü Alanı (chat.png) -->
+    <section class="preview-section">
       <div class="container">
-        <div class="section-header">
-          <span class="section-tag">Önizleme</span>
-          <h2 class="section-title">Arayüz ve Kullanım Deneyimi</h2>
-          <p class="section-desc">Hafif, Discord benzeri çalışma alanı organizasyonu ve kesintisiz medya iletişimi.</p>
-        </div>
-
-        <div class="demo-media-card">
-          <div class="demo-video-wrapper">
-            <video class="demo-video" src="assets/demo.mp4" autoplay muted loop playsinline poster="assets/chat.png">
-              Tarayıcınız video etiketini desteklemiyor.
-            </video>
-          </div>
-        </div>
-
-        <div class="screenshots-grid">
-          <div class="screenshot-card">
-            <div class="screenshot-img-wrap">
-              <img src="assets/chat.png" alt="BuddsApp Sohbet Odası" loading="lazy">
-            </div>
-            <div class="screenshot-info">
-              <h3 class="screenshot-title">Gerçek Zamanlı Sohbet Odası</h3>
-              <p class="screenshot-desc">Supabase Realtime ile anlık mesaj iletimi, emoji ve dosya paylaşımı.</p>
-            </div>
-          </div>
-
-          <div class="screenshot-card">
-            <div class="screenshot-img-wrap">
-              <img src="assets/voice.png" alt="BuddsApp Sesli Oda" loading="lazy">
-            </div>
-            <div class="screenshot-info">
-              <h3 class="screenshot-title">Canlı Sesli Oda</h3>
-              <p class="screenshot-desc">LiveKit WebRTC altyapısıyla düşük gecikmeli grup sesli görüşmesi.</p>
-            </div>
-          </div>
-
-          <div class="screenshot-card">
-            <div class="screenshot-img-wrap">
-              <img src="assets/login.png" alt="BuddsApp Giriş Ekranı" loading="lazy">
-            </div>
-            <div class="screenshot-info">
-              <h3 class="screenshot-title">Güvenli Giriş & Davetler</h3>
-              <p class="screenshot-desc">Supabase Auth tabanlı oturum yönetimi ve davet kodu sistemi.</p>
-            </div>
-          </div>
-        </div>
+        <figure class="screenshot-figure">
+          <img src="assets/chat.png" alt="BuddsApp Sohbet Ekranı" onerror="this.closest('figure').remove()" loading="lazy">
+        </figure>
       </div>
     </section>
 
@@ -273,7 +230,7 @@
               <strong>Problem:</strong> AI asistanı için kullanılan Google Gemini API anahtarı istemci tarafından veritabanından sorgulanıyor veya doğrudan taranabilir durumdaydı; bu durum kotanın kötüye kullanımına açıktı.
             </div>
             <div class="note-block">
-              <strong>Çözüm:</strong> Tüm yapay zeka sorgularını <span class="step-code">ai-chat</span> Edge Function'ı arkasında proxyledik. Gemini API anahtarı Supabase Vault/Secrets içinde tutulur; yalnızca doğrulanmış kullanıcıların metin talepleri işlenerek yanıt döndürülür.
+              <strong>Çözüm:</strong> Tüm yapay zeka sorgularını <span class="step-code">ai-chat</span> Edge Function'ı arkasında proxyledik. Gemini API anahtarı Supabase Edge Function secrets içinde tutulur; yalnızca doğrulanmış kullanıcıların metin talepleri işlenerek yanıt döndürülür.
             </div>
           </div>
 
@@ -284,7 +241,7 @@
               <strong>Problem:</strong> Yönetici hakları istemci kodundaki statik e-posta denetimiyle ve bypass anahtarlarıyla kontrol ediliyordu. İstemci kodunu manipüle eden biri veritabanı kısıtlamalarını aşabiliyordu.
             </div>
             <div class="note-block">
-              <strong>Çözüm:</strong> Yetkilendirmeyi veritabanı düzeyinde <span class="step-code">users.role</span> ('admin', 'moderator', 'member') şemasına ve PostgreSQL Row Level Security (RLS) politikalarına bağladık. Yetkisiz istemciler doğrudan API çağrısı yapsa dahi veritabanı düzeyinde engellenir.
+              <strong>Çözüm:</strong> Yetki kontrolü client'tan veritabanına taşındı: RLS policy'leri ve davet kullanımı için <span class="step-code">security definer</span> bir RPC.
             </div>
           </div>
 
@@ -354,6 +311,13 @@
             Ayrıntılı yönergeler, ortam değişkenleri tablosu ve yapılandırma ayrıntıları için <a href="https://github.com/onuracar-dev/buddsapp#readme" target="_blank" rel="noopener noreferrer">GitHub README.md dokümanını inceleyin</a>.
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- Hobi Projesi Notu -->
+    <section class="hobby-section">
+      <div class="container">
+        <p class="hobby-note">Arkadaş grubum için yaptığım bir hobi projesi.</p>
       </div>
     </section>
   </main>

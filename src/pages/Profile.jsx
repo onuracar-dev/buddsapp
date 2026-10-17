@@ -4,7 +4,6 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../supabase';
 import { toast } from 'react-hot-toast';
 import { Camera, ArrowLeft } from 'lucide-react';
-import { gatherIntelligence } from '../utils/intelligence';
 
 export default function Profile() {
   const { currentUser, userProfile, fetchUserProfile } = useAuth();
@@ -112,18 +111,10 @@ export default function Profile() {
 
       if (isNewUser && inviteToken) {
         try {
-          const intel = await gatherIntelligence();
-          await supabase.from('invites').update({ 
-            used: true,
-            used_by: currentUser.id,
-            used_by_name: displayName || currentUser.email,
-            ip_address: intel.ip_address,
-            location: intel.location,
-            device_info: intel.device_info
-          }).eq('id', inviteToken);
+          await supabase.rpc('redeem_invite', { code: inviteToken });
           sessionStorage.removeItem('budds_invite_token');
-        } catch(e) {
-          console.error("Invite intel hatası", e);
+        } catch (e) {
+          console.error("Invite redeem error in profile:", e);
         }
       }
 

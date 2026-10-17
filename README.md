@@ -48,20 +48,25 @@ Supabase secrets:
 supabase secrets set LIVEKIT_API_KEY=your_livekit_api_key
 supabase secrets set LIVEKIT_API_SECRET=your_livekit_api_secret
 supabase secrets set GEMINI_API_KEY=your_gemini_api_key
+# Opsiyonel: Varsayılan model (gemini-3.5-flash) dışında bir model belirtmek için:
+supabase secrets set GEMINI_MODEL=gemini-3.5-flash
 ```
 
 ## Demo Verisiyle Çalıştırma
 
 Projeyi yerel ortamda veya test veritabanında hazır demo verileriyle çalıştırmak için:
 
-1. Supabase SQL Editöründe migration dosyasını uygulayın:
-   - `supabase/migrations/0001_rls_policies.sql`
-2. Demo verilerini içeri aktarın:
-   - `supabase/seed.sql`
-3. Bu işlem şunları oluşturur:
-   - **Demo Workspace** çalışma alanı (`a0000000-0000-0000-0000-000000000001`)
+1. **Supabase Auth Kullanıcısı Oluşturun:**
+   - Supabase Dashboard -> **Authentication** -> **Users** sekmesinden `demo1@example.com` adresiyle bir kullanıcı oluşturun.
+   - Oluşturulan kullanıcının `User UID` değerini kopyalayıp `supabase/seed.sql` dosyasında `Demo User 1` için `id` alanına yazın.
+2. **Migration Dosyasını Uygulayın:**
+   - Supabase SQL Editöründe `supabase/migrations/0001_rls_policies.sql` dosyasını çalıştırın.
+3. **Demo Verilerini İçeri Aktarın:**
+   - Supabase SQL Editöründe `supabase/seed.sql` dosyasını çalıştırın.
+4. Bu işlem şunları oluşturur:
+   - **Demo Workspace** çalışma alanı (`00000000-0000-0000-0000-000000000001`)
    - 5 sahte kullanıcı profili (`Demo User 1` - `Demo User 5`)
-   - `DEMO-INVITE-2026` geçerli davet kodu
+   - `00000000-0000-0000-0000-0000000000b1` geçerli demo davet kodu
    - "Genel Sohbet" kanalında 24 adet örnek sohbet mesajı
 
 ## Local Development
@@ -74,9 +79,6 @@ npm run dev
 ## Preview & Media References
 
 - Sohbet Ekranı: [chat.png](./docs/assets/chat.png)
-- Sesli Oda: [voice.png](./docs/assets/voice.png)
-- Giriş Ekranı: [login.png](./docs/assets/login.png)
-- Demo Kaydı: [demo.mp4](./docs/assets/demo.mp4)
 
 ## Validation
 
@@ -91,12 +93,15 @@ npm run build
 
 - Removed LiveKit API secret usage from browser code
 - Added Supabase Edge Function token signing
+- Proxied Gemini requests through Supabase Edge Function with input payload limits
+- Migrated authorization to database role checks and PostgreSQL RLS policies
+- Secured invite system via `redeem_invite` security definer RPC
 - Removed generated build and scratch artifacts from source control
-- Updated environment guidance to avoid leaking voice infrastructure secrets
+- Updated environment guidance to avoid leaking voice and AI infrastructure secrets
 
 ## Roadmap
 
-- Add screenshots or short demo video from a seeded workspace
+- Add real screenshots from a seeded workspace
 - Split large chat-room logic into smaller modules
 - Add focused integration tests for invite and voice-call flows
 - Add deployment notes for Supabase/Vercel setup

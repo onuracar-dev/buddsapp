@@ -1,50 +1,49 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabase';
+import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'react-hot-toast';
 import { Loader2 } from 'lucide-react';
 
 export default function Invite() {
   const { token } = useParams();
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
   const [verifying, setVerifying] = useState(true);
 
   useEffect(() => {
-    const verifyToken = async () => {
-      try {
-        const { data: invite, error } = await supabase
-          .from('invites')
-          .select('*')
-          .eq('id', token)
-          .single();
+    const handleInvite = async () => {
+      if (!token) {
+        navigate('/login');
+        return;
+      }
 
-        if (error || !invite) {
-          toast.error('Geçersiz davet linki.');
+      if (currentUser) {
+        try {
+          const { error } = await supabase.rpc('redeem_invite', { code: token });
+          if (error) {
+            toast.error('Geçersiz veya kullanılmış davet linki.');
+            navigate('/login');
+            return;
+          }
+
+          toast.success('Davet kabul edildi! Mekana katıldınız.');
+          navigate('/');
+        } catch (_error) {
+          toast.error('Davet kullanılırken bir hata oluştu.');
           navigate('/login');
-          return;
+        } finally {
+          setVerifying(false);
         }
-
-        if (invite.used) {
-          toast.error('Bu davet linki daha önce kullanılmış.');
-          navigate('/login');
-          return;
-        }
-
-        // Token geçerliyse, localStorage'a kaydet ve login'e yönlendir
+      } else {
         localStorage.setItem('budds_invite_token', token);
-        toast.success('Davet doğrulandı! Lütfen giriş yapın.');
+        toast.success('Davet linki algılandı! Lütfen giriş yapın.');
         navigate('/login');
-
-      } catch (_error) {
-        toast.error('Bir hata oluştu.');
-        navigate('/login');
-      } finally {
-        setVerifying(false);
       }
     };
 
-    verifyToken();
-  }, [token, navigate]);
+    handleInvite();
+  }, [token, currentUser, navigate]);
 
   return (
     <div className="flex-center" style={{ height: '100vh', background: 'var(--background)' }}>

@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '../supabase';
-import { gatherIntelligence } from '../utils/intelligence';
 import { toast } from 'react-hot-toast';
 
 export const AuthContext = createContext();
@@ -40,20 +39,6 @@ export function AuthProvider({ children }) {
       if (!data) return null;
 
       const isAdminUser = data.role === 'admin';
-
-      // Self-healing: PWA önbelleğe alma sorunları yüzünden workspace_id boş kalmışsa, invites tablosundan düzelt
-      if (!data.workspace_id && !isAdminUser) {
-        const { data: usedInvite } = await supabase
-          .from('invites')
-          .select('workspace_id')
-          .eq('used_by', uid)
-          .single();
-          
-        if (usedInvite?.workspace_id) {
-          await supabase.from('users').update({ workspace_id: usedInvite.workspace_id }).eq('id', uid);
-          data.workspace_id = usedInvite.workspace_id;
-        }
-      }
 
       const profileWithAdmin = {
         ...data,
@@ -144,41 +129,24 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const consumeInviteToken = async (user) => {
       const token = localStorage.getItem('budds_invite_token');
-      if (token) {
+      if (token && user) {
         try {
-          const intel = await gatherIntelligence();
-          const { data, error } = await supabase.from('invites').update({ 
-            used: true,
-            used_by: user.id,
-            used_by_name: user.user_metadata?.full_name || user.email,
-            ip_address: intel.ip_address,
-            location: intel.location,
-            device_info: intel.device_info
-          }).eq('id', token).select();
-          
+          const { data: wsId, error } = await supabase.rpc('redeem_invite', { code: token });
           if (error) {
             console.error("Token kullanma hatası:", error);
-            toast.error("Davet kodu güncellenirken hata: " + error.message);
-          } else if (!data || data.length === 0) {
-            console.error("Token güncellenemedi: RLS engeli veya kod bulunamadı.");
-            toast.error("Davet kodu onaylanamadı (Yetkisiz işlem veya daha önce kullanılmış).");
-            localStorage.removeItem('budds_invite_token'); // Temizle ki sürekli hata vermesin
-          } else {
-            // Kullanıcıyı mekana ata
-            const inviteData = data[0];
-            if (inviteData.workspace_id) {
-              await supabase.from('users').update({ workspace_id: inviteData.workspace_id }).eq('id', user.id);
-            }
-            
-            // Eğer profil halihazırda yüklendiyse, state'i güncelle ki anında yansısın
-            setUserProfile(prev => prev ? { ...prev, workspace_id: inviteData.workspace_id } : prev);
-            
+            toast.error("Davet kodu doğrulanamadı: " + error.message);
             localStorage.removeItem('budds_invite_token');
+          } else {
+            localStorage.removeItem('budds_invite_token');
+            if (wsId) {
+              setUserProfile(prev => prev ? { ...prev, workspace_id: wsId } : prev);
+              setActiveWorkspaceId(wsId);
+            }
             toast.success("Mekana başarıyla katıldınız!");
           }
         } catch (e) {
-          console.error("Invite intel hatası", e);
-          toast.error("İşlem hatası: " + e.message);
+          console.error("Invite redeem hatası", e);
+          localStorage.removeItem('budds_invite_token');
         }
       }
     };

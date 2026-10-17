@@ -3,22 +3,36 @@
 -- Kullanıcı sadece kendi workspace'ini görür.
 -- Rol değiştirmeyi ve admin işlemlerini sadece role = 'admin' olan yapabilir.
 
+--------------------------------------------------------------------------------
+-- YARDIMCI FONKSİYONLAR
+--------------------------------------------------------------------------------
+
 -- Yardımcı fonksiyon: Kullanıcı admin mi?
 create or replace function public.is_admin()
-returns boolean as $$
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
   select exists (
     select 1 from public.users
     where id = auth.uid() and role = 'admin'
   );
-$$ language sql security definer;
+$$;
 
 -- Yardımcı fonksiyon: Kullanıcının workspace_id'si
 create or replace function public.current_user_workspace_id()
-returns text as $$
+returns text
+language sql
+stable
+security definer
+set search_path = public
+as $$
   select workspace_id from public.users
   where id = auth.uid()
   limit 1;
-$$ language sql security definer;
+$$;
 
 --------------------------------------------------------------------------------
 -- 1. USERS TABLOSU
@@ -34,22 +48,22 @@ create policy "users_select_policy" on public.users
     or public.is_admin()
   );
 
--- Ekleme: Yeni kayıt olan kullanıcı kendi kaydını ekleyebilir (varsayılan role: 'member')
+-- Ekleme: Yeni kayıt olan kullanıcı kendi kaydını sadece 'member' rolü ile ekleyebilir
 create policy "users_insert_policy" on public.users
   for insert
   with check (
     auth.uid() = id
+    and role = 'member'
   );
 
--- Güncelleme: Kullanıcı kendi profilini güncelleyebilir (fakat admin olmayan rolünü admin yapamaz), admin herkesi güncelleyebilir
+-- Güncelleme: Kullanıcı kendi profilini veya admin herkesi güncelleyebilir
 create policy "users_update_policy" on public.users
   for update
   using (
     auth.uid() = id or public.is_admin()
   )
   with check (
-    (auth.uid() = id and (role = 'member' or role = (select role from public.users where id = auth.uid())))
-    or public.is_admin()
+    auth.uid() = id or public.is_admin()
   );
 
 -- Silme: Sadece admin kullanıcı silebilir
@@ -58,6 +72,31 @@ create policy "users_delete_policy" on public.users
   using (
     public.is_admin()
   );
+
+-- Kullanıcı alanlarını koruma trigger'ı:
+-- Admin değilse role ve mevcut workspace_id değiştirilemez (sadece old.workspace_id null ise set edilebilir).
+create or replace function public.protect_user_fields()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if not public.is_admin() then
+    new.role := old.role;
+    if old.workspace_id is not null then
+      new.workspace_id := old.workspace_id;
+    end if;
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists tr_protect_user_fields on public.users;
+create trigger tr_protect_user_fields
+  before update on public.users
+  for each row
+  execute function public.protect_user_fields();
 
 --------------------------------------------------------------------------------
 -- 2. WORKSPACES TABLOSU
@@ -133,10 +172,21 @@ create policy "messages_select_policy" on public.messages
     )
   );
 
+-- Ekleme: Kullanıcı sadece erişim hakkı olan bir sohbete kendi adına mesaj gönderebilir
 create policy "messages_insert_policy" on public.messages
   for insert
   with check (
-    auth.uid() = sender_uid
+    (
+      auth.uid() = sender_uid
+      and exists (
+        select 1 from public.chats c
+        where c.id = messages.chat_id
+        and (
+          c.workspace_id = public.current_user_workspace_id()
+          or auth.uid()::text = any(c.participants)
+        )
+      )
+    )
     or public.is_admin()
   );
 
@@ -194,22 +244,28 @@ create policy "calls_update_policy" on public.calls
   );
 
 --------------------------------------------------------------------------------
--- 6. INVITES TABLOSU
+-- 6. INVITES TABLOSU VE REDEEM RPC
 --------------------------------------------------------------------------------
 alter table public.invites enable row level security;
 
--- Okuma: Davet kodunu kontrol eden anonim/giriş yapmış kullanıcılar veya workspace adminleri
+-- Doğrudan okuma / ekleme / güncelleme / silme sadece admin'e açıktır.
 create policy "invites_select_policy" on public.invites
   for select
   using (
-    workspace_id = public.current_user_workspace_id()
-    or used = false
-    or public.is_admin()
+    public.is_admin()
   );
 
--- Ekleme / Silme: Sadece admin davet kodu üretebilir veya silebilir
 create policy "invites_insert_policy" on public.invites
   for insert
+  with check (
+    public.is_admin()
+  );
+
+create policy "invites_update_policy" on public.invites
+  for update
+  using (
+    public.is_admin()
+  )
   with check (
     public.is_admin()
   );
@@ -220,13 +276,45 @@ create policy "invites_delete_policy" on public.invites
     public.is_admin()
   );
 
--- Güncelleme: Daveti kullanan kişi (used=true yapmak için) veya admin
-create policy "invites_update_policy" on public.invites
-  for update
-  using (
-    used = false
-    or public.is_admin()
-  );
+-- Davet kullanma RPC'si (Security Definer)
+-- Oturum açmış kullanıcının davet kodunu doğrular, daveti kullanıldı işaretler ve workspace_id atar.
+create or replace function public.redeem_invite(code text)
+returns text
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_invite record;
+  v_user_id uuid;
+begin
+  v_user_id := auth.uid();
+  if v_user_id is null then
+    raise exception 'Oturum açılmamış.';
+  end if;
+
+  select * into v_invite
+  from public.invites
+  where id::text = trim(redeem_invite.code)
+    and used = false
+  for update;
+
+  if not found then
+    raise exception 'Geçersiz veya kullanılmış davet kodu.';
+  end if;
+
+  update public.invites
+  set used = true,
+      used_by = v_user_id
+  where id = v_invite.id;
+
+  update public.users
+  set workspace_id = v_invite.workspace_id
+  where id = v_user_id;
+
+  return v_invite.workspace_id::text;
+end;
+$$;
 
 --------------------------------------------------------------------------------
 -- 7. STORIES TABLOSU
@@ -280,3 +368,9 @@ create policy "app_settings_admin_write" on public.app_settings
   for all
   using (public.is_admin())
   with check (public.is_admin());
+
+--------------------------------------------------------------------------------
+-- 9. ESKİ SECRET TEMİZLİĞİ
+--------------------------------------------------------------------------------
+-- Eski client tarafından okunabilen açık anahtar kaydını temizle
+delete from public.global_settings where id = 'gemini_api_key';
