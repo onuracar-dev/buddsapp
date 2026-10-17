@@ -76,10 +76,6 @@ npm install
 npm run dev
 ```
 
-## Preview & Media References
-
-- Sohbet Ekranı: [chat.png](./docs/assets/chat.png)
-
 ## Validation
 
 ```bash

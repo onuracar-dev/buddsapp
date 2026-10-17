@@ -74,19 +74,18 @@ create policy "users_delete_policy" on public.users
   );
 
 -- Kullanıcı alanlarını koruma trigger'ı:
--- Admin değilse role ve mevcut workspace_id değiştirilemez (sadece old.workspace_id null ise set edilebilir).
+-- Client'tan (authenticated/anon) gelen doğrudan update'lerde admin değilse role ve workspace_id değiştirilemez.
+-- workspace_id sadece redeem_invite (security definer, current_user = fonksiyon sahibi) üzerinden set edilir.
+-- Bu fonksiyon bilerek security definer DEĞİL: current_user çağıranın rolünü göstermeli.
 create or replace function public.protect_user_fields()
 returns trigger
 language plpgsql
-security definer
 set search_path = public
 as $$
 begin
-  if not public.is_admin() then
+  if current_user in ('authenticated', 'anon') and not public.is_admin() then
     new.role := old.role;
-    if old.workspace_id is not null then
-      new.workspace_id := old.workspace_id;
-    end if;
+    new.workspace_id := old.workspace_id;
   end if;
   return new;
 end;
