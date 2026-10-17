@@ -1,335 +1,267 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BuddsApp</title>
-  <meta name="description" content="BuddsApp — Supabase, LiveKit ve Gemini altyapısıyla geliştirilmiş, açık kaynaklı ve gerçek zamanlı topluluk sohbet platformu.">
-  
-  <!-- Open Graph -->
+  <meta name="description" content="A group chat built for a group of friends: workspaces, real-time messages, voice rooms and an AI bot. How it's wired, and what was fixed before open-sourcing it.">
+  <meta name="theme-color" content="#151412">
+
   <meta property="og:type" content="website">
-  <meta property="og:title" content="BuddsApp — Gerçek Zamanlı Topluluk Sohbeti">
-  <meta property="og:description" content="Supabase, LiveKit ve Gemini altyapısıyla geliştirilmiş, açık kaynaklı ve gerçek zamanlı topluluk sohbet platformu.">
+  <meta property="og:title" content="BuddsApp">
+  <meta property="og:description" content="A group chat built for a group of friends. Supabase, LiveKit and Gemini, wired up and hardened for open source.">
   <meta property="og:url" content="https://buddsapp.onuracar.dev">
-
-  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="BuddsApp — Gerçek Zamanlı Topluluk Sohbeti">
-  <meta name="twitter:description" content="Supabase, LiveKit ve Gemini altyapısıyla geliştirilmiş, açık kaynaklı ve gerçek zamanlı topluluk sohbet platformu.">
 
-  <!-- Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Navigation -->
-  <header class="site-header">
-    <div class="container nav-wrap">
-      <a href="#" class="brand">
-        <span class="brand-dot"></span>
-        <span>BuddsApp</span>
-      </a>
-      <nav class="nav-links">
-        <a href="#mimari">Mimari</a>
-        <a href="#muhendislik">Mühendislik</a>
-        <a href="#self-host">Self-Host</a>
-        <a href="https://github.com/onuracar-dev/buddsapp" target="_blank" rel="noopener noreferrer">GitHub</a>
+  <header class="top">
+    <div class="wrap top-row">
+      <a class="wordmark" href="#">budds<span>app</span></a>
+      <nav class="top-links">
+        <a href="https://github.com/onuracar-dev/buddsapp" target="_blank" rel="noopener noreferrer">github ↗</a>
+        <a href="https://onuracar.dev" target="_blank" rel="noopener noreferrer">onuracar.dev ↗</a>
       </nav>
     </div>
   </header>
 
   <main>
-    <!-- Hero Section -->
-    <section class="hero-section">
-      <div class="container">
-        <div class="hero-pill">
-          <span>Açık Kaynak Kodlu Portföy Projesi</span>
-        </div>
-        <h1 class="hero-title">BuddsApp — gerçek zamanlı topluluk sohbeti</h1>
-        <p class="hero-subtitle">
-          Workspaces, WebRTC sesli odaları, AI asistanı ve Supabase Realtime altyapısıyla geliştirilmiş açık kaynaklı topluluk platformu.
-        </p>
-        <div class="hero-actions">
-          <a href="https://github.com/onuracar-dev/buddsapp" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-            <span>GitHub'da İncele</span>
-          </a>
-          <a href="#self-host" class="btn btn-secondary">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
-            <span>Kendi Sunucunda Çalıştır</span>
-          </a>
-        </div>
+
+    <!-- Hero -->
+    <section class="hero wrap">
+      <p class="presence"><span class="dot" aria-hidden="true"></span> offline · self-host only</p>
+      <h1>BuddsApp</h1>
+      <p class="lede">
+        A group chat I built for my friends: invite-only workspaces, real-time messages,
+        voice rooms, stories, and an AI bot with opinions. It isn't hosted anymore.
+        This page is about how it's wired, and what I fixed before open-sourcing it.
+      </p>
+
+      <dl class="facts">
+        <div><dt>stack</dt><dd>React 19 · Vite · Supabase · LiveKit · Gemini</dd></div>
+        <div><dt>built</dt><dd>solo, for one friend group</dd></div>
+        <div><dt>status</dt><dd>source available, bring your own keys</dd></div>
+      </dl>
+
+      <div class="actions">
+        <a class="btn btn-solid" href="https://github.com/onuracar-dev/buddsapp" target="_blank" rel="noopener noreferrer">Source on GitHub</a>
+        <a class="btn btn-line" href="#run">Run it yourself</a>
       </div>
     </section>
 
-    <!-- Durum Notu -->
-    <section class="status-section">
-      <div class="container">
-        <div class="status-card">
-          <svg class="status-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="8" x2="12" y2="12"></line>
-            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-          </svg>
-          <p>Bu proje şu an canlı değil. Kendi Supabase, LiveKit ve Gemini anahtarlarınla self-host edebilirsin.</p>
-        </div>
-      </div>
+    <!-- 01 Features -->
+    <section class="block wrap" id="features">
+      <header class="block-head">
+        <span class="num">01</span>
+        <h2>What's in it</h2>
+      </header>
+
+      <ul class="features">
+        <li><h3>Workspaces</h3><p>Invite-only spaces. You only see the members, chats and stories of the workspace you joined.</p></li>
+        <li><h3>Real-time chat</h3><p>Supabase Realtime for messages and typing state. Images, files, voice notes, doodles, and a tic-tac-toe game inside the chat.</p></li>
+        <li><h3>Voice rooms</h3><p>LiveKit rooms for group calls. Room tokens are signed on the server, never in the browser.</p></li>
+        <li><h3>Budds AI</h3><p>A Gemini-backed bot you can call into any chat. It reads the last few messages and answers in character.</p></li>
+        <li><h3>Stories</h3><p>Story-style photo and video posts, scoped to your workspace.</p></li>
+        <li><h3>Admin panel</h3><p>Roles, invite codes, announcements and member management for whoever runs the group.</p></li>
+      </ul>
     </section>
 
-    <!-- Ekran Görüntüsü Alanı (chat.png) -->
-    <section class="preview-section">
-      <div class="container">
-        <figure class="screenshot-figure">
-          <img src="assets/chat.png" alt="BuddsApp Sohbet Ekranı" onerror="this.closest('section').remove()" loading="lazy">
-        </figure>
-      </div>
-    </section>
+    <!-- 02 Architecture -->
+    <section class="block wrap" id="architecture">
+      <header class="block-head">
+        <span class="num">02</span>
+        <h2>How it's wired</h2>
+      </header>
+      <p class="block-intro">
+        There's no custom backend server. The browser talks to Supabase directly, and anything that needs a secret
+        goes through an Edge Function. Postgres row-level security decides what each user can read or write.
+      </p>
 
-    <!-- Mimari Section -->
-    <section id="mimari" class="section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-tag">Altyapı</span>
-          <h2 class="section-title">Sistem Mimarisi</h2>
-          <p class="section-desc">Tüm servisler doğrudan tarayıcı ile backend-as-a-service ve uç fonksiyonlar arasında ayrıştırılmıştır.</p>
-        </div>
-
-        <div class="architecture-diagram-card">
-          <svg class="arch-svg" viewBox="0 0 920 220" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- Box 1: Browser -->
-            <rect x="20" y="45" width="170" height="130" rx="12" fill="var(--bg-card)" stroke="var(--border-color)" stroke-width="1.5"/>
-            <text x="105" y="78" text-anchor="middle" fill="var(--text-primary)" font-family="Inter, sans-serif" font-size="14" font-weight="700">Browser (Client)</text>
-            <text x="105" y="103" text-anchor="middle" fill="var(--text-secondary)" font-family="Inter, sans-serif" font-size="12">React 19 + Vite SPA</text>
-            <text x="105" y="123" text-anchor="middle" fill="var(--text-secondary)" font-family="Inter, sans-serif" font-size="12">LiveKit React Client</text>
-            <text x="105" y="143" text-anchor="middle" fill="var(--text-secondary)" font-family="Inter, sans-serif" font-size="12">Supabase JS Client</text>
-
-            <!-- Box 2: Supabase BaaS -->
-            <rect x="250" y="20" width="210" height="180" rx="12" fill="var(--bg-card)" stroke="var(--border-color)" stroke-width="1.5"/>
-            <text x="355" y="52" text-anchor="middle" fill="var(--text-primary)" font-family="Inter, sans-serif" font-size="14" font-weight="700">Supabase BaaS</text>
-            <text x="355" y="78" text-anchor="middle" fill="var(--primary-accent)" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600">Auth / JWT</text>
-            <text x="355" y="104" text-anchor="middle" fill="var(--text-secondary)" font-family="Inter, sans-serif" font-size="12">PostgreSQL + RLS</text>
-            <text x="355" y="128" text-anchor="middle" fill="var(--text-secondary)" font-family="Inter, sans-serif" font-size="12">Supabase Realtime</text>
-            <text x="355" y="152" text-anchor="middle" fill="var(--text-secondary)" font-family="Inter, sans-serif" font-size="12">Storage (Avatars/Files)</text>
-
-            <!-- Box 3: Edge Functions -->
-            <rect x="520" y="45" width="180" height="130" rx="12" fill="var(--bg-card)" stroke="var(--border-color)" stroke-width="1.5"/>
-            <text x="610" y="78" text-anchor="middle" fill="var(--text-primary)" font-family="Inter, sans-serif" font-size="14" font-weight="700">Edge Functions</text>
-            <text x="610" y="103" text-anchor="middle" fill="var(--primary-accent)" font-family="JetBrains Mono, monospace" font-size="11">livekit-token (Deno)</text>
-            <text x="610" y="125" text-anchor="middle" fill="var(--primary-accent)" font-family="JetBrains Mono, monospace" font-size="11">ai-chat proxy (Deno)</text>
-            <text x="610" y="147" text-anchor="middle" fill="var(--text-secondary)" font-family="Inter, sans-serif" font-size="11">Secret Isolation</text>
-
-            <!-- Box 4: LiveKit Cloud -->
-            <rect x="750" y="25" width="150" height="75" rx="10" fill="var(--bg-card)" stroke="var(--border-color)" stroke-width="1.5"/>
-            <text x="825" y="55" text-anchor="middle" fill="var(--text-primary)" font-family="Inter, sans-serif" font-size="13" font-weight="700">LiveKit Cloud</text>
-            <text x="825" y="75" text-anchor="middle" fill="var(--text-secondary)" font-family="Inter, sans-serif" font-size="11">WebRTC SFU Rooms</text>
-
-            <!-- Box 5: Google Gemini -->
-            <rect x="750" y="120" width="150" height="75" rx="10" fill="var(--bg-card)" stroke="var(--border-color)" stroke-width="1.5"/>
-            <text x="825" y="150" text-anchor="middle" fill="var(--text-primary)" font-family="Inter, sans-serif" font-size="13" font-weight="700">Google Gemini</text>
-            <text x="825" y="170" text-anchor="middle" fill="var(--text-secondary)" font-family="Inter, sans-serif" font-size="11">AI Chat Endpoint</text>
-
-            <!-- Arrows -->
-            <!-- Browser -> Supabase -->
-            <line x1="190" y1="110" x2="250" y2="110" stroke="var(--diagram-arrow)" stroke-width="2" marker-end="url(#arrowhead)"/>
-            
-            <!-- Supabase -> Edge Functions -->
-            <line x1="460" y1="110" x2="520" y2="110" stroke="var(--diagram-arrow)" stroke-width="2" marker-end="url(#arrowhead)"/>
-
-            <!-- Edge Functions -> LiveKit Cloud -->
-            <path d="M 700 85 L 725 85 L 725 60 L 750 60" fill="none" stroke="var(--diagram-arrow)" stroke-width="2" marker-end="url(#arrowhead)"/>
-
-            <!-- Edge Functions -> Google Gemini -->
-            <path d="M 700 135 L 725 135 L 725 160 L 750 160" fill="none" stroke="var(--diagram-arrow)" stroke-width="2" marker-end="url(#arrowhead)"/>
-
-            <!-- Marker Defs -->
+      <figure class="diagram">
+        <div class="diagram-scroll">
+          <svg viewBox="0 0 760 380" role="img" aria-labelledby="dia-title dia-desc">
+            <title id="dia-title">BuddsApp architecture</title>
+            <desc id="dia-desc">The browser talks to Supabase for auth, data, realtime and storage. It calls two Edge Functions: livekit-token, which signs voice room tokens, and ai-chat, which forwards prompts to Gemini. The browser joins LiveKit voice rooms over WebRTC with the signed token.</desc>
             <defs>
-              <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
-                <path d="M 1 1 L 7 4 L 1 7 Z" fill="var(--diagram-arrow)"/>
+              <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0 0 L10 5 L0 10 z" class="arrowhead"/>
               </marker>
             </defs>
+
+            <!-- WebRTC path: browser -> LiveKit -->
+            <path d="M95 150 V18 H665 V58" class="edge edge-accent" marker-end="url(#arrow)"/>
+            <text x="110" y="34" class="edge-label">WebRTC audio · room token</text>
+
+            <!-- Browser -->
+            <rect x="20" y="150" width="150" height="100" rx="10" class="node node-strong"/>
+            <text x="95" y="194" class="node-title" text-anchor="middle">Browser</text>
+            <text x="95" y="216" class="node-sub" text-anchor="middle">React · Vite · PWA</text>
+
+            <!-- Supabase -->
+            <rect x="250" y="40" width="250" height="190" rx="12" class="group"/>
+            <text x="268" y="66" class="group-title">Supabase</text>
+            <rect x="268" y="80" width="214" height="28" rx="6" class="chip"/>
+            <text x="282" y="99" class="chip-text">Auth (Google)</text>
+            <rect x="268" y="115" width="214" height="28" rx="6" class="chip"/>
+            <text x="282" y="134" class="chip-text">Postgres + RLS</text>
+            <rect x="268" y="150" width="214" height="28" rx="6" class="chip"/>
+            <text x="282" y="169" class="chip-text">Realtime</text>
+            <rect x="268" y="185" width="214" height="28" rx="6" class="chip"/>
+            <text x="282" y="204" class="chip-text">Storage</text>
+
+            <!-- Edge functions -->
+            <rect x="250" y="255" width="250" height="110" rx="12" class="group"/>
+            <text x="268" y="281" class="group-title">Edge Functions</text>
+            <rect x="268" y="292" width="214" height="28" rx="6" class="chip chip-secret"/>
+            <text x="282" y="311" class="chip-text">livekit-token</text>
+            <text x="470" y="311" class="chip-key" text-anchor="end">secret</text>
+            <rect x="268" y="327" width="214" height="28" rx="6" class="chip chip-secret"/>
+            <text x="282" y="346" class="chip-text">ai-chat</text>
+            <text x="470" y="346" class="chip-key" text-anchor="end">secret</text>
+
+            <!-- Browser -> Supabase -->
+            <path d="M170 180 C 212 180, 212 130, 248 130" class="edge" marker-end="url(#arrow)"/>
+            <text x="242" y="122" class="edge-label" text-anchor="end">queries · ws</text>
+
+            <!-- Browser -> Edge functions -->
+            <path d="M170 222 C 212 222, 212 306, 248 306" class="edge" marker-end="url(#arrow)"/>
+            <text x="242" y="334" class="edge-label" text-anchor="end">invoke + JWT</text>
+
+            <!-- LiveKit -->
+            <rect x="590" y="60" width="150" height="70" rx="10" class="node"/>
+            <text x="665" y="92" class="node-title" text-anchor="middle">LiveKit Cloud</text>
+            <text x="665" y="112" class="node-sub" text-anchor="middle">voice rooms</text>
+
+            <!-- livekit-token -> LiveKit (shared secret) -->
+            <path d="M482 306 C 548 306, 548 110, 588 110" class="edge edge-dashed" marker-end="url(#arrow)"/>
+            <text x="558" y="196" class="edge-label">signs with</text>
+            <text x="558" y="210" class="edge-label">LiveKit secret</text>
+
+            <!-- Gemini -->
+            <rect x="590" y="290" width="150" height="70" rx="10" class="node"/>
+            <text x="665" y="322" class="node-title" text-anchor="middle">Gemini API</text>
+            <text x="665" y="342" class="node-sub" text-anchor="middle">Budds AI replies</text>
+
+            <!-- ai-chat -> Gemini -->
+            <path d="M482 341 C 540 341, 540 325, 588 325" class="edge" marker-end="url(#arrow)"/>
           </svg>
         </div>
-
-        <div class="arch-table-card">
-          <table class="arch-table">
-            <thead>
-              <tr>
-                <th>Bileşen</th>
-                <th>Teknoloji</th>
-                <th>Sorumluluk ve Detay</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>İstemci Arayüzü</strong></td>
-                <td><span class="arch-badge">React 19 + Vite</span></td>
-                <td>Modern SPA mimarisi, CSS token sistemi, responsive mobil ve masaüstü arayüz.</td>
-              </tr>
-              <tr>
-                <td><strong>Kimlik & Veri</strong></td>
-                <td><span class="arch-badge">Supabase Auth & Postgres</span></td>
-                <td>JWT tabanlı kullanıcı oturumu, rol denetimi ve Row Level Security (RLS) politikaları.</td>
-              </tr>
-              <tr>
-                <td><strong>Gerçek Zamanlı İletişim</strong></td>
-                <td><span class="arch-badge">Supabase Realtime</span></td>
-                <td>WebSocket kanalları üzerinden anlık mesajlaşma, bildirimler ve presence takibi.</td>
-              </tr>
-              <tr>
-                <td><strong>Sesli Görüşme</strong></td>
-                <td><span class="arch-badge">LiveKit Cloud (WebRTC)</span></td>
-                <td>Seçilebilir ses odaları, katılımcı denetimi ve düşük gecikmeli WebRTC SFU bağlantısı.</td>
-              </tr>
-              <tr>
-                <td><strong>Uç Fonksiyonlar</strong></td>
-                <td><span class="arch-badge">Supabase Edge (Deno)</span></td>
-                <td>API anahtarlarını tarayıcıdan izole eden LiveKit token oluşturucu ve AI proxy fonksiyonu.</td>
-              </tr>
-              <tr>
-                <td><strong>Yapay Zeka</strong></td>
-                <td><span class="arch-badge">Google Gemini API</span></td>
-                <td>Sunucu tarafında korunan gizli anahtarla çalışan sohbet içi yapay zeka asistanı.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+        <figcaption>Secrets live only in Edge Function environment variables. The browser only ever holds the public anon key and the user's session.</figcaption>
+      </figure>
     </section>
 
-    <!-- Mühendislik Notları -->
-    <section id="muhendislik" class="section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-tag">Teknik Detaylar</span>
-          <h2 class="section-title">Mühendislik Notları</h2>
-          <p class="section-desc">Geliştirme sürecinde çözülen kritik mimari, güvenlik ve senkronizasyon kararları.</p>
-        </div>
+    <!-- 03 Fixes -->
+    <section class="block wrap" id="fixes">
+      <header class="block-head">
+        <span class="num">03</span>
+        <h2>What I fixed before publishing</h2>
+      </header>
+      <p class="block-intro">
+        The first version worked for a group of friends who trusted each other. Before putting the code in public,
+        I went through it as if a stranger would read the bundle. Four things didn't hold up.
+      </p>
 
-        <div class="notes-grid">
-          <div class="note-card">
-            <span class="note-number">01 / Güvenlik</span>
-            <h3 class="note-title">LiveKit Token İmzalamayı Edge Function'a Taşımak</h3>
-            <div class="note-block">
-              <strong>Problem:</strong> Ses odalarına bağlanabilmek için gereken LiveKit API secret değeri daha önce istemci ortamında veya frontend değişkenlerinde saklanıyordu; bu da anahtarın kullanıcı tarayıcısında açığa çıkmasına yol açıyordu.
-            </div>
-            <div class="note-block">
-              <strong>Çözüm:</strong> Token üretimini bağımsız bir <span class="step-code">livekit-token</span> Supabase Edge Function'ına taşıdık. İstemci kullanıcı JWT'sini iletir, fonksiyon oda ve yetki doğrulaması yaparak imzalı geçici token döndürür. API secret istemci koduna asla sızmaz.
-            </div>
+      <ol class="fixes">
+        <li class="fix">
+          <div class="fix-text">
+            <h3>The LiveKit secret was in the browser</h3>
+            <p>Voice room tokens were signed client-side with <code>VITE_LIVEKIT_API_SECRET</code>. Anything prefixed with <code>VITE_</code> ends up in the JavaScript bundle, so anyone could mint tokens for any room. Signing moved to an Edge Function that also checks the caller belongs to that chat.</p>
           </div>
+<pre class="diff" aria-label="Code change"><span class="file">src/utils/livekitToken.js</span>
+<span class="del">- const apiSecret = import.meta.env.VITE_LIVEKIT_API_SECRET;</span>
+<span class="del">- const jwt = await new SignJWT({ ... }).sign(secretKey);</span>
+<span class="add">+ const { data } = await supabase.functions</span>
+<span class="add">+   .invoke('livekit-token', {</span>
+<span class="add">+     body: { roomName, participantName, participantId }</span>
+<span class="add">+   });</span></pre>
+        </li>
 
-          <div class="note-card">
-            <span class="note-number">02 / Güvenlik</span>
-            <h3 class="note-title">Gemini Anahtarını Client'tan Çıkarıp Proxy Fonksiyona Almak</h3>
-            <div class="note-block">
-              <strong>Problem:</strong> AI asistanı için kullanılan Google Gemini API anahtarı istemci tarafından veritabanından sorgulanıyor veya doğrudan taranabilir durumdaydı; bu durum kotanın kötüye kullanımına açıktı.
-            </div>
-            <div class="note-block">
-              <strong>Çözüm:</strong> Tüm yapay zeka sorgularını <span class="step-code">ai-chat</span> Edge Function'ı arkasında proxyledik. Gemini API anahtarı Supabase Edge Function secrets içinde tutulur; yalnızca doğrulanmış kullanıcıların metin talepleri işlenerek yanıt döndürülür.
-            </div>
+        <li class="fix">
+          <div class="fix-text">
+            <h3>The Gemini key was readable from a table</h3>
+            <p>The AI key sat in a <code>global_settings</code> row that the client fetched before every request. Any signed-in user could read it. Prompts now go through an <code>ai-chat</code> function that holds the key, fixes the model server-side and caps the request size. The old row gets deleted by the migration.</p>
           </div>
+<pre class="diff" aria-label="Code change"><span class="file">src/services/aiService.js</span>
+<span class="del">- const { data } = await supabase.from('global_settings')</span>
+<span class="del">-   .select('text_value').eq('id', 'gemini_api_key').single();</span>
+<span class="add">+ const { data, error } = await supabase.functions</span>
+<span class="add">+   .invoke('ai-chat', { body: { contents, generationConfig } });</span></pre>
+        </li>
 
-          <div class="note-card">
-            <span class="note-number">03 / Yetkilendirme</span>
-            <h3 class="note-title">E-posta Tabanlı Admin Kontrolünden Rol + RLS'e Geçiş</h3>
-            <div class="note-block">
-              <strong>Problem:</strong> Yönetici hakları istemci kodundaki statik e-posta denetimiyle ve bypass anahtarlarıyla kontrol ediliyordu. İstemci kodunu manipüle eden biri veritabanı kısıtlamalarını aşabiliyordu.
-            </div>
-            <div class="note-block">
-              <strong>Çözüm:</strong> Yetki kontrolü client'tan veritabanına taşındı: RLS policy'leri ve davet kullanımı için <span class="step-code">security definer</span> bir RPC.
-            </div>
+        <li class="fix">
+          <div class="fix-text">
+            <h3>"Admin" was an email check in the frontend</h3>
+            <p>The app compared the user's email to <code>VITE_ADMIN_EMAIL</code>, and a hard-coded "easter egg" password could skip the invite step. Both were visible in the bundle. Admin is now a <code>role</code> column, and a trigger stops users from changing their own role or workspace.</p>
           </div>
+<pre class="diff" aria-label="Code change"><span class="file">supabase/migrations/0001_rls_policies.sql</span>
+<span class="ctx">  if current_user in ('authenticated', 'anon')</span>
+<span class="ctx">     and not public.is_admin() then</span>
+<span class="add">+   new.role := old.role;</span>
+<span class="add">+   new.workspace_id := old.workspace_id;</span>
+<span class="ctx">  end if;</span></pre>
+        </li>
 
-          <div class="note-card">
-            <span class="note-number">04 / Kararlılık</span>
-            <h3 class="note-title">Realtime Mesajlaşma ve PWA Önbellek Sorunları</h3>
-            <div class="note-block">
-              <strong>Problem:</strong> PWA önbellekleri ve yerel depolama tutarsızlıkları nedeniyle kullanıcılar var olmayan bir çalışma alanı ID'sinde takılı kalabiliyor, bu da Supabase Realtime kanallarının sessizce kopmasına yol açıyordu.
-            </div>
-            <div class="note-block">
-              <strong>Çözüm:</strong> <span class="step-code">AuthContext</span> içerisine self-healing (kendi kendini onaran) çalışma alanı kontrolü entegre ettik. Kayıtlı çalışma alanı veritabanında bulunamadığında otomatik olarak erişilebilir ilk çalışma alanına geçilir ve Realtime kanalları güvenle yeniden bağlanır.
-            </div>
+        <li class="fix">
+          <div class="fix-text">
+            <h3>Invite codes could be listed</h3>
+            <p>The client looked up invites directly, so the table had to be readable, which meant unused codes could be listed. Invites are now admin-only, and joining happens through one <code>security definer</code> function that checks the code, marks it used and assigns the workspace in a single step.</p>
           </div>
-        </div>
-      </div>
+<pre class="diff" aria-label="Code change"><span class="file">src/pages/Invite.jsx</span>
+<span class="del">- await supabase.from('invites').select('*').eq('id', token)</span>
+<span class="add">+ await supabase.rpc('redeem_invite', { code: token })</span></pre>
+        </li>
+      </ol>
+
+      <p class="caveat"><strong>Not verified yet:</strong> the RLS policies and the trigger are written and reviewed, but they haven't been run against a live database. The repo also doesn't include the table schema yet, so a fresh setup can't fully work until that's exported.</p>
     </section>
 
-    <!-- Self-host Section -->
-    <section id="self-host" class="section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-tag">Kurulum</span>
-          <h2 class="section-title">Self-Host Adımları</h2>
-          <p class="section-desc">BuddsApp'i kendi altyapınızda ayağa kaldırmak için gereken 5 temel adım.</p>
-        </div>
+    <!-- 04 Run -->
+    <section class="block wrap" id="run">
+      <header class="block-head">
+        <span class="num">04</span>
+        <h2>Run it yourself</h2>
+      </header>
+      <p class="block-intro">You'll need free accounts on Supabase, LiveKit Cloud and Google AI Studio. The full guide is in the README.</p>
 
-        <div class="selfhost-card">
-          <ol class="steps-list">
-            <li class="step-item">
-              <span class="step-number">1</span>
-              <div class="step-content">
-                <div class="step-title">Supabase Projesi Açın</div>
-                <div class="step-desc">Supabase Dashboard üzerinde yeni bir proje oluşturun ve Project URL ile Anon Public Key değerlerinizi not edin.</div>
-              </div>
-            </li>
-            <li class="step-item">
-              <span class="step-number">2</span>
-              <div class="step-content">
-                <div class="step-title">Migration ve Seed Verisini Uygulayın</div>
-                <div class="step-desc">Supabase SQL Editörü üzerinden sırasıyla <span class="step-code">supabase/migrations/0001_rls_policies.sql</span> ve <span class="step-code">supabase/seed.sql</span> betiklerini çalıştırın.</div>
-              </div>
-            </li>
-            <li class="step-item">
-              <span class="step-number">3</span>
-              <div class="step-content">
-                <div class="step-title">Edge Function Secrets Tanımlayın ve Dağıtın</div>
-                <div class="step-desc">Supabase CLI kullanarak <span class="step-code">LIVEKIT_API_KEY</span>, <span class="step-code">LIVEKIT_API_SECRET</span> ve <span class="step-code">GEMINI_API_KEY</span> değişkenlerini set edin, ardından <span class="step-code">livekit-token</span> ve <span class="step-code">ai-chat</span> fonksiyonlarını deploy edin.</div>
-              </div>
-            </li>
-            <li class="step-item">
-              <span class="step-number">4</span>
-              <div class="step-content">
-                <div class="step-title">İstemci Çevre Değişkenlerini Tanımlayın</div>
-                <div class="step-desc"><span class="step-code">.env.example</span> dosyasını <span class="step-code">.env</span> olarak kopyalayın; <span class="step-code">VITE_SUPABASE_URL</span>, <span class="step-code">VITE_SUPABASE_ANON_KEY</span> ve <span class="step-code">VITE_LIVEKIT_URL</span> değerlerinizi girin.</div>
-              </div>
-            </li>
-            <li class="step-item">
-              <span class="step-number">5</span>
-              <div class="step-content">
-                <div class="step-title">Uygulamayı Çalıştırın</div>
-                <div class="step-desc">Terminalde <span class="step-code">npm install</span> ardından <span class="step-code">npm run dev</span> komutunu çalıştırarak tarayıcınızda açın.</div>
-              </div>
-            </li>
-          </ol>
-
-          <div class="selfhost-footer">
-            Ayrıntılı yönergeler, ortam değişkenleri tablosu ve yapılandırma ayrıntıları için <a href="https://github.com/onuracar-dev/buddsapp#readme" target="_blank" rel="noopener noreferrer">GitHub README.md dokümanını inceleyin</a>.
-          </div>
-        </div>
-      </div>
+      <ol class="steps">
+        <li>
+          <p>Clone and install.</p>
+<pre class="cmd">git clone https://github.com/onuracar-dev/buddsapp
+cd buddsapp && npm install</pre>
+        </li>
+        <li>
+          <p>Fill in <code>.env</code> with your public Supabase and LiveKit values.</p>
+<pre class="cmd">VITE_SUPABASE_URL=...
+VITE_SUPABASE_ANON_KEY=...
+VITE_LIVEKIT_URL=wss://your-project.livekit.cloud</pre>
+        </li>
+        <li>
+          <p>Store the secrets on Supabase and deploy the functions.</p>
+<pre class="cmd">supabase secrets set LIVEKIT_API_KEY=... LIVEKIT_API_SECRET=... GEMINI_API_KEY=...
+supabase functions deploy livekit-token
+supabase functions deploy ai-chat</pre>
+        </li>
+        <li>
+          <p>Apply <code>supabase/migrations</code>, optionally load <code>supabase/seed.sql</code>, then start the app.</p>
+<pre class="cmd">npm run dev</pre>
+        </li>
+      </ol>
     </section>
 
-    <!-- Hobi Projesi Notu -->
-    <section class="hobby-section">
-      <div class="container">
-        <p class="hobby-note">Arkadaş grubum için yaptığım bir hobi projesi.</p>
-      </div>
-    </section>
   </main>
 
-  <!-- Site Footer -->
-  <footer class="site-footer">
-    <div class="container footer-wrap">
-      <div>
-        <strong>BuddsApp</strong> &bull; Geliştirici: Onur Acar
-      </div>
-      <div class="footer-links">
-        <a href="https://github.com/onuracar-dev/buddsapp" target="_blank" rel="noopener noreferrer">GitHub Deposu</a>
+  <footer class="foot">
+    <div class="wrap foot-row">
+      <p>Built for a group of friends, kept around because I learned a lot from it.</p>
+      <p class="foot-links">
+        <a href="https://github.com/onuracar-dev/buddsapp" target="_blank" rel="noopener noreferrer">github</a>
         <a href="https://onuracar.dev" target="_blank" rel="noopener noreferrer">onuracar.dev</a>
-      </div>
+      </p>
     </div>
   </footer>
 
