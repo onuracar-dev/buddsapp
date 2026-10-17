@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { X, Check, Pen, Eraser, RotateCcw } from 'lucide-react';
+import { X, Check, Pen, Eraser } from 'lucide-react';
 
 export default function DoodleModal({ file, onCancel, onSend }) {
   const canvasRef = useRef(null);

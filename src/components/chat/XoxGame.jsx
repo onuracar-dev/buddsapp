@@ -9,7 +9,7 @@ export default function XoxGame({ msg }) {
   let gameState;
   try {
     gameState = JSON.parse(msg.content);
-  } catch (e) {
+  } catch (_e) {
     return <div>Oyun verisi bozuk.</div>;
   }
 

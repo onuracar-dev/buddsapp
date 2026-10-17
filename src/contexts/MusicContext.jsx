@@ -47,13 +47,13 @@ export const MusicProvider = ({ children }) => {
 
   const forcePlay = useCallback(() => {
     if (ytPlayerRef.current && typeof ytPlayerRef.current.playVideo === 'function') {
-      try { ytPlayerRef.current.playVideo(); } catch(e) {}
+      try { ytPlayerRef.current.playVideo(); } catch (_e) { /* ignore */ }
     }
   }, []);
 
   const forcePause = useCallback(() => {
     if (ytPlayerRef.current && typeof ytPlayerRef.current.pauseVideo === 'function') {
-      try { ytPlayerRef.current.pauseVideo(); } catch(e) {}
+      try { ytPlayerRef.current.pauseVideo(); } catch (_e) { /* ignore */ }
     }
   }, []);
 
@@ -87,7 +87,7 @@ export const MusicProvider = ({ children }) => {
     setCurrentTrack(null);
     setRadioTitle('');
     if (ytPlayerRef.current && typeof ytPlayerRef.current.stopVideo === 'function') {
-      try { ytPlayerRef.current.stopVideo(); } catch(e) {}
+      try { ytPlayerRef.current.stopVideo(); } catch (_e) { /* ignore */ }
     }
   }, []);
 
@@ -110,7 +110,7 @@ export const MusicProvider = ({ children }) => {
     const startSeconds = totalElapsedSeconds % avgDuration;
 
     if (ytPlayerRef.current && typeof ytPlayerRef.current.loadVideoById === 'function') {
-      try { ytPlayerRef.current.stopVideo(); } catch(e) {}
+      try { ytPlayerRef.current.stopVideo(); } catch (_e) { /* ignore */ }
       
       if (isPlaylist) {
         ytPlayerRef.current.loadPlaylist({ list: youtubeId, listType: 'playlist', index: calcIndex, startSeconds: startSeconds });

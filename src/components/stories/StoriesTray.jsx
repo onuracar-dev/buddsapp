@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import StoryViewer from './StoryViewer';
@@ -13,17 +13,7 @@ export default function StoriesTray() {
   const [uploading, setUploading] = useState(false);
   const [viewingUserId, setViewingUserId] = useState(null);
 
-  useEffect(() => {
-    fetchStories();
-    
-    const channel = supabase.channel('public:stories')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'stories' }, fetchStories)
-      .subscribe();
-      
-    return () => supabase.removeChannel(channel);
-  }, [activeWorkspaceId]);
-
-  const fetchStories = async () => {
+  const fetchStories = useCallback(async () => {
     if (!activeWorkspaceId) return;
 
     const { data: stories, error } = await supabase
@@ -59,7 +49,17 @@ export default function StoriesTray() {
       }
     }
     setLoading(false);
-  };
+  }, [activeWorkspaceId]);
+
+  useEffect(() => {
+    fetchStories();
+    
+    const channel = supabase.channel('public:stories')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'stories' }, fetchStories)
+      .subscribe();
+      
+    return () => supabase.removeChannel(channel);
+  }, [fetchStories]);
 
   const handleUpload = async (e) => {
     const file = e.target.files[0];
@@ -89,7 +89,7 @@ export default function StoriesTray() {
       }]);
       
       toast.success('Hikaye paylaşıldı!');
-    } catch (error) {
+    } catch (_error) {
       toast.error('Hikaye yüklenemedi');
     } finally {
       setUploading(false);

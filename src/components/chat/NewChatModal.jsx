@@ -33,7 +33,7 @@ export default function NewChatModal({ onClose }) {
         
         const usersList = data.filter(doc => doc.id !== currentUser.id);
         setUsers(usersList);
-      } catch (error) {
+      } catch (_error) {
         toast.error("Kullanıcılar getirilemedi");
       } finally {
         setLoading(false);
@@ -89,7 +89,7 @@ export default function NewChatModal({ onClose }) {
 
       navigate(`/chat/${newChat.id}`);
       onClose();
-    } catch (error) {
+    } catch (_error) {
       toast.error('Sohbet başlatılamadı');
     }
   };
@@ -116,7 +116,7 @@ export default function NewChatModal({ onClose }) {
 
       navigate(`/chat/${newGroup.id}`);
       onClose();
-    } catch (error) {
+    } catch (_error) {
       toast.error('Grup oluşturulamadı');
     }
   };

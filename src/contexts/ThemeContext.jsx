@@ -13,12 +13,7 @@ export const ThemeProvider = ({ children }) => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     
     const applyTheme = () => {
-      let isDarkMode = false;
-      if (theme === 'system') {
-        isDarkMode = mediaQuery.matches;
-      } else {
-        isDarkMode = theme === 'dark';
-      }
+      const isDarkMode = theme === 'system' ? mediaQuery.matches : theme === 'dark';
       
       setIsDark(isDarkMode);
       
@@ -31,7 +26,7 @@ export const ThemeProvider = ({ children }) => {
 
     applyTheme();
 
-    const listener = (e) => {
+    const listener = () => {
       if (theme === 'system') applyTheme();
     };
     

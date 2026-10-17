@@ -1,10 +1,10 @@
-# İleri Düzey Güvenlik (Kriptografi) Planı - GELECEK İÇİN
+# İleri Düzey Güvenlik (Kriptografi) Planı
 
-Bu belge, uygulamanın özellikleri tamamen bittikten sonra "Askeri Düzeyde" güvenli hale getirilmesi için uygulanacak Uçtan Uca Şifreleme (E2EE), XSS/CSP Koruması ve Kod Karmaşıklaştırma (Obfuscation) adımlarını hatırda tutmak için oluşturulmuştur.
+Bu belge, uygulamanın temel özellikleri tamamlandıktan sonra güvenliği artırmak amacıyla uygulanabilecek Uçtan Uca Şifreleme (E2EE), XSS/CSP Koruması ve Kod Karmaşıklaştırma (Obfuscation) adımlarını özetler.
 
 ## Neden Ertelendi?
-- E2EE sistemi mesaj arama, sunucu tabanlı filtreleme gibi gelecekte eklenecek özellikleri imkansız hale getirir.
-- Kod karmaşıklaştırma (Obfuscation), geliştirme aşamasındaki hata ayıklama (debugging) sürecini kör eder.
+- E2EE sistemi düz metin arama ve sunucu tabanlı filtreleme gibi özellikleri zorlaştırır.
+- Kod karmaşıklaştırma (Obfuscation), geliştirme aşamasındaki hata ayıklama (debugging) sürecini zorlaştırır.
 - Sisteme tam geçiş yapıldığında test amacıyla atılan eski mesajların sıfırlanması gerekecektir.
 
 ## Uygulanacak Adımlar
@@ -19,7 +19,7 @@ Bu belge, uygulamanın özellikleri tamamen bittikten sonra "Askeri Düzeyde" g�
 - Vercel ve Vite yapılandırmasına **Content-Security-Policy (CSP)** başlıkları eklenecek. Bu sayede sohbete zararlı bir JavaScript kodu veya dış bağlantı enjekte edilmesi engellenecek.
 
 ### 3. Kod Karmaşıklaştırma (Obfuscation)
-- `vite-plugin-javascript-obfuscator` paketi kurularak, derlenen kodlar tamamen anlamsız değişken isimlerine dönüştürülecek. İstemci tarafında tersine mühendislik yapılması imkansız hale getirilecek.
+- `vite-plugin-javascript-obfuscator` paketi kurularak, derlenen kodlar anlamsız değişken isimlerine dönüştürülecek. İstemci tarafında tersine mühendislik yapılmasını zorlaştıracak.
 
 ---
-**Not:** Bu adımlar uygulama V1.0 sürümüne ulaştığında ve yeni "özellik" ekleme aşaması bittiğinde devreye alınmalıdır.
+**Not:** Bu adımlar uygulama kararlı sürüme ulaştığında ve yeni özellik ekleme aşaması bittiğinde devreye alınmalıdır.

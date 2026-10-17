@@ -5,13 +5,6 @@ import { format } from 'date-fns';
 export default function StoryViewer({ stories, user, onClose }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      handleNext();
-    }, 5000); // 5 saniye sonra geç
-    return () => clearTimeout(timer);
-  }, [currentIndex, stories]);
-
   const handleNext = () => {
     if (currentIndex < stories.length - 1) {
       setCurrentIndex(prev => prev + 1);
@@ -19,6 +12,17 @@ export default function StoryViewer({ stories, user, onClose }) {
       onClose();
     }
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (currentIndex < stories.length - 1) {
+        setCurrentIndex(prev => prev + 1);
+      } else {
+        onClose();
+      }
+    }, 5000); // 5 saniye sonra geç
+    return () => clearTimeout(timer);
+  }, [currentIndex, stories.length, onClose]);
 
   const handlePrev = () => {
     if (currentIndex > 0) {

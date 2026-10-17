@@ -107,7 +107,7 @@ export default function ChatRoom() {
           toast.error("Sohbet bulunamadı");
           navigate('/');
         }
-      } catch (error) { toast.error("Hata oluştu"); }
+      } catch (_error) { toast.error("Hata oluştu"); }
     };
     fetchChatInfo();
 
@@ -250,7 +250,7 @@ export default function ChatRoom() {
         for (const msg of unreadMessages) {
           try {
             await supabase.from('messages').update({ read_by: [...(msg.read_by || []), currentUser.id] }).eq('id', msg.id);
-          } catch (e) { }
+          } catch (_e) { /* ignore */ }
         }
       }
     };
@@ -360,7 +360,7 @@ export default function ChatRoom() {
       } else {
         setText(''); setReplyingTo(null);
       }
-    } catch (error) { toast.error('Mesaj gönderilemedi'); } finally { setSending(false); }
+    } catch (_error) { toast.error('Mesaj gönderilemedi'); } finally { setSending(false); }
   };
 
   const sendSpecialMessage = async (type, content = '') => {
@@ -384,7 +384,7 @@ export default function ChatRoom() {
         chat_id: chatId, sender_uid: currentUser.id, type, content, read_by: [currentUser.id]
       }]);
       setShowTrollMenu(false);
-    } catch (e) { toast.error("Gönderilemedi"); }
+    } catch (_e) { toast.error("Gönderilemedi"); }
   };
 
   const setNickname = async (targetUserId) => {
@@ -427,7 +427,7 @@ export default function ChatRoom() {
 
       toast.success('Mesaj tarihten silindi.');
       setSelectedMessage(null);
-    } catch (e) {
+    } catch (_e) {
       toast.error('Mesaj silinemedi.');
     }
   };
@@ -448,7 +448,7 @@ export default function ChatRoom() {
       await supabase.from('chats').delete().eq('id', chatId);
       toast.success('Sohbet tamamen yeryüzünden silindi.');
       navigate('/');
-    } catch (e) {
+    } catch (_e) {
       toast.error('Sohbet silinemedi.');
     }
   };
@@ -601,7 +601,7 @@ export default function ChatRoom() {
         updated_at: new Date().toISOString(),
         ...getStreakUpdates()
       }).eq('id', chatId);
-    } catch (error) { toast.error('Dosya yüklenemedi'); } finally { setSending(false); setUploadProgress(0); }
+    } catch (_error) { toast.error('Dosya yüklenemedi'); } finally { setSending(false); setUploadProgress(0); }
   };
 
   const handleBgUpload = async (e) => {
@@ -619,7 +619,7 @@ export default function ChatRoom() {
       const { data } = supabase.storage.from('chats').getPublicUrl(filePath);
       await supabase.from('chats').update({ bg_url: data.publicUrl }).eq('id', chatId);
       toast.success('Arka plan güncellendi!', { id: toastId });
-    } catch(e) { 
+    } catch (_e) { 
       toast.error('Arka plan yüklenemedi', { id: toastId }); 
     }
   };
@@ -638,7 +638,7 @@ export default function ChatRoom() {
       const { data } = supabase.storage.from('chats').getPublicUrl(filePath);
       await supabase.from('chats').update({ photo_url: data.publicUrl }).eq('id', chatId);
       toast.success('Grup fotoğrafı güncellendi!', { id: toastId });
-    } catch(err) { 
+    } catch (_err) { 
       toast.error('Fotoğraf yüklenemedi', { id: toastId }); 
     }
   };
@@ -660,7 +660,7 @@ export default function ChatRoom() {
     try {
       await supabase.from('chats').update({ name: finalName }).eq('id', chatId);
       toast.success('Güncellendi!', { id: toastId });
-    } catch(e) {
+    } catch (_e) {
       toast.error('Hata oluştu.', { id: toastId });
     }
   };
@@ -711,7 +711,7 @@ export default function ChatRoom() {
           updated_at: new Date().toISOString(),
           ...getStreakUpdates()
         }).eq('id', chatId);
-      } catch (error) {
+      } catch (_error) {
         toast.error('Ses gönderilemedi');
       } finally {
         setSending(false);
@@ -800,7 +800,7 @@ export default function ChatRoom() {
           <label style={{ display: 'flex', cursor: chatInfo?.type.includes('group') && isAdmin ? 'pointer' : 'default' }}>
             <img 
               src={chatInfo?.type.includes('group') ? (chatInfo.photo_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(chatInfo?.name || 'S')}&background=random&color=fff&size=100&bold=true`) : (otherUser?.photo_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(otherUser?.display_name || 'S')}&background=random&color=fff&size=100&bold=true`)}
-              onClick={(e) => {
+              onClick={() => {
                 if (!chatInfo?.type.includes('group') && otherUserId) {
                   navigate(`/user/${otherUserId}`);
                 }

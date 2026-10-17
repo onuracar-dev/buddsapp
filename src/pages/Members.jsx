@@ -20,7 +20,7 @@ export default function Members() {
       }
       
       setLoading(true);
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('users')
         .select('id, display_name, photo_url, badges, message_count')
         .or(`workspace_id.eq.${activeWorkspaceId},role.eq.admin`)

@@ -8,21 +8,21 @@ export default function AnnouncementBanner() {
   const [hiddenIds, setHiddenIds] = useState([]);
   const { activeWorkspaceId } = useAuth();
 
-  const fetchAnnouncements = async () => {
-    let query = supabase.from('global_settings').select('*');
-    if (activeWorkspaceId) {
-      query = query.in('id', ['announcement', `announcement_${activeWorkspaceId}`]);
-    } else {
-      query = query.eq('id', 'announcement');
-    }
-    
-    const { data } = await query;
-    if (data) {
-      setAnnouncements(data);
-    }
-  };
-
   useEffect(() => {
+    const fetchAnnouncements = async () => {
+      let query = supabase.from('global_settings').select('*');
+      if (activeWorkspaceId) {
+        query = query.in('id', ['announcement', `announcement_${activeWorkspaceId}`]);
+      } else {
+        query = query.eq('id', 'announcement');
+      }
+      
+      const { data } = await query;
+      if (data) {
+        setAnnouncements(data);
+      }
+    };
+
     fetchAnnouncements();
 
     const channel = supabase

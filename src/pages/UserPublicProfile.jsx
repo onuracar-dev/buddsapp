@@ -14,7 +14,7 @@ export default function UserPublicProfile() {
   useEffect(() => {
     const fetchProfile = async () => {
       setLoading(true);
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('users')
         .select('*')
         .eq('id', userId)

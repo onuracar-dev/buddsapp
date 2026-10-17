@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'react-hot-toast';
-import { Plus, Copy, Check, Hash, Link as LinkIcon, ArrowLeft } from 'lucide-react';
+import { Plus, Check, Hash, Link as LinkIcon, ArrowLeft } from 'lucide-react';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
@@ -101,7 +101,7 @@ export default function Admin() {
 
       if (error) throw error;
       toast.success('Yeni davet linki oluşturuldu!');
-    } catch (error) {
+    } catch (_error) {
       toast.error('Davet oluşturulamadı');
     } finally {
       setLoading(false);
@@ -186,7 +186,7 @@ export default function Admin() {
     try {
       await supabase.from('invites').delete().eq('id', id);
       toast.success('Davet kalıcı olarak silindi.');
-    } catch (e) {
+    } catch (_e) {
       toast.error('Silinemedi.');
     }
   };
@@ -217,7 +217,7 @@ export default function Admin() {
       const { data } = await supabase.from('global_settings').select('*').like('id', 'announcement%');
       if (data) setCurrentAnnouncements(data.filter(a => a.is_active));
       setAnnouncementText('');
-    } catch (err) {
+    } catch (_err) {
       toast.error('Duyuru yayınlanamadı.');
     } finally {
       setLoading(false);
@@ -231,7 +231,7 @@ export default function Admin() {
       toast.success('Duyuru yayından kaldırıldı.');
       const { data } = await supabase.from('global_settings').select('*').like('id', 'announcement%');
       if (data) setCurrentAnnouncements(data.filter(a => a.is_active));
-    } catch (err) {
+    } catch (_err) {
       toast.error('Duyuru kaldırılamadı.');
     } finally {
       setLoading(false);
@@ -340,7 +340,7 @@ export default function Admin() {
       setPublicRoomName('');
       setPublicRoomDescription('');
       setPublicRoomYoutubeUrl('');
-    } catch (e) {
+    } catch (_e) {
       toast.error('Oda oluşturulamadı: Lütfen SQL kodunu çalıştırdığınızdan emin olun.');
     } finally {
       setLoading(false);

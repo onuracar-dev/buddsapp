@@ -43,7 +43,7 @@ export default function Login() {
       localStorage.setItem('budds_invite_token', invite.id);
       setHasInvite(true);
       toast.success('Davet doğrulandı! Şimdi giriş yapabilirsin.');
-    } catch (e) {
+    } catch (_e) {
       toast.error('Kod doğrulanırken hata oluştu.');
     } finally {
       setVerifying(false);

@@ -14,7 +14,7 @@ import { supabase } from '../supabase';
 
 export default function Home() {
   const { currentUser, userProfile, logout, activeWorkspaceId, workspaces, changeWorkspace } = useAuth();
-  const { tuneIn, forcePlay } = useMusic();
+  const { tuneIn } = useMusic();
   const { chats, loading } = useChats();
   const navigate = useNavigate();
   const [showNewChat, setShowNewChat] = useState(false);
@@ -29,7 +29,7 @@ export default function Home() {
       try {
         const { data } = await supabase.from('app_settings').select('home_bg_url').eq('id', 'global').single();
         if (data && data.home_bg_url) setGlobalBg(data.home_bg_url);
-      } catch (e) {}
+      } catch (_e) { /* ignore */ }
     };
     
     const fetchPublicRooms = async () => {
@@ -86,7 +86,7 @@ export default function Home() {
       await supabase.from('app_settings').upsert({ id: 'global', home_bg_url: data.publicUrl });
       setGlobalBg(data.publicUrl);
       toast.success('Anasayfa arka planı güncellendi!', { id: toastId });
-    } catch(err) { 
+    } catch (_err) { 
       toast.error('Arka plan yüklenemedi', { id: toastId }); 
     }
   };
@@ -323,7 +323,7 @@ export default function Home() {
                         try {
                           const { supabase } = await import('../supabase');
                           await supabase.from('chats').delete().eq('id', room.id);
-                        } catch(err) {}
+                        } catch (_err) { /* ignore */ }
                       }}
                       style={{ background: 'var(--danger)', color: '#fff', padding: '5px 10px', borderRadius: 'var(--radius-sm)', fontSize: '0.8rem', fontWeight: 'bold' }}
                     >

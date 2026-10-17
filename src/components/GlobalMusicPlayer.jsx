@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useMusic } from '../contexts/MusicContext';
 import { Play, Pause, X } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -7,17 +7,6 @@ const GlobalMusicPlayer = () => {
   const { currentTrack, isPlaying, stopMusic, radioTitle, togglePlay } = useMusic();
   const navigate = useNavigate();
   const location = useLocation();
-
-  const radioTime = useMemo(() => {
-    if (!currentTrack) return { songIndex: 0, startSeconds: 0 };
-    const createdAt = new Date(currentTrack.createdAt).getTime();
-    const elapsedSeconds = Math.floor((Date.now() - createdAt) / 1000);
-    const AVG_SONG_DURATION = 210;
-    return {
-      songIndex: Math.floor(elapsedSeconds / AVG_SONG_DURATION) % 50,
-      startSeconds: elapsedSeconds % AVG_SONG_DURATION
-    };
-  }, [currentTrack]);
 
   // Odada mıyız kontrolü
   const isInCurrentRoom = currentTrack ? location.pathname === `/chat/${currentTrack.roomId}` : false;

@@ -35,7 +35,7 @@ export default function Invite() {
         toast.success('Davet doğrulandı! Lütfen giriş yapın.');
         navigate('/login');
 
-      } catch (error) {
+      } catch (_error) {
         toast.error('Bir hata oluştu.');
         navigate('/login');
       } finally {
