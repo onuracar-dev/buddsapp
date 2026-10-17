@@ -50,12 +50,33 @@ supabase secrets set LIVEKIT_API_SECRET=your_livekit_api_secret
 supabase secrets set GEMINI_API_KEY=your_gemini_api_key
 ```
 
+## Demo Verisiyle Çalıştırma
+
+Projeyi yerel ortamda veya test veritabanında hazır demo verileriyle çalıştırmak için:
+
+1. Supabase SQL Editöründe migration dosyasını uygulayın:
+   - `supabase/migrations/0001_rls_policies.sql`
+2. Demo verilerini içeri aktarın:
+   - `supabase/seed.sql`
+3. Bu işlem şunları oluşturur:
+   - **Demo Workspace** çalışma alanı (`a0000000-0000-0000-0000-000000000001`)
+   - 5 sahte kullanıcı profili (`Demo User 1` - `Demo User 5`)
+   - `DEMO-INVITE-2026` geçerli davet kodu
+   - "Genel Sohbet" kanalında 24 adet örnek sohbet mesajı
+
 ## Local Development
 
 ```bash
 npm install
 npm run dev
 ```
+
+## Preview & Media References
+
+- Sohbet Ekranı: [chat.png](./docs/assets/chat.png)
+- Sesli Oda: [voice.png](./docs/assets/voice.png)
+- Giriş Ekranı: [login.png](./docs/assets/login.png)
+- Demo Kaydı: [demo.mp4](./docs/assets/demo.mp4)
 
 ## Validation
 
